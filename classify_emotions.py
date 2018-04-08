@@ -36,8 +36,10 @@ def classify():
         with open(pathToFileInDisk + fp, 'rb') as f:
             data = f.read()
             response = requests.post(_url, params=params, headers=headers, data=data)
-            info = response.json()[0].get('faceAttributes')  # format response as dict
-            responses.append(info)
+            json = response.json();
+            if (len(json) > 0):
+                info = response.json()[0].get('faceAttributes')  # format response as dict
+                responses.append(info)
     return responses
 
 def get_emoji_suggestions(responses):
@@ -70,6 +72,7 @@ def get_frames(num_frames, delay=0.1):
         s, im = cam.read() # captures image
         cv2.imwrite(pathToFileInDisk + "frame_" + str(frame) + ".jpg",im) # writes image test.jpg to disk
         sleep(delay)
+    cam.release() # close out the camera
 
 def recommend_emojize():
     get_frames(num_frames)
@@ -77,5 +80,3 @@ def recommend_emojize():
     return get_emoji_suggestions(responses)
 
 print(recommend_emojize())
-
-
