@@ -1,7 +1,9 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from emoji_bank import emoji_bank
 import struct
+
+from emoji_bank import emoji_bank
+from classify_emotions import recommend_emojize
 
 # Source for images: https://emojipedia.org/
 
@@ -11,27 +13,35 @@ app.geometry("500x300+200+200")
 
 question_mark = Image.open("emoji_images/question_mark.png").resize((25, 25), Image.ANTIALIAS)
 placeholder = ImageTk.PhotoImage(question_mark)
-emoji_button = Button(app, text="suggestion: ", image=placeholder, compound=RIGHT, command=(lambda : suggest(emoji_bank.get("happiness"))))
+emoji_button = Button(app, text="suggestion: ", image=placeholder, compound=RIGHT, command=(lambda : suggest()))
 emoji_button.pack()
 emoji_button.image = placeholder
 
-def suggest(emojis):
+def suggest():
     """
     Create overlay to allow users to pick an emoji
     :param emojis: emojis to use in suggestions
     """
+    emojis = recommend_emojize()
+    print (emojis)
     overlay = Toplevel()
-    buttons = []
-    for emoji in emojis:
-        filename="emoji_images/" + emoji[1:-1] + ".png"
-        image = Image.open(filename)
-        image_resize = image.resize((25, 25), Image.ANTIALIAS)
-        photo = ImageTk.PhotoImage(image_resize)
 
-        b = Button(overlay, image=photo, command=(lambda x=photo : add_emoji(x, overlay)))
-        b.image = photo
-        b.pack()
-        buttons.append(b)
+    if emojis == None:
+        l = Label(overlay, text="no suggestions")
+        l.pack()
+
+    else:
+        buttons = []
+        for emoji in emojis:
+            filename="emoji_images/" + emoji[1:-1] + ".png"
+            image = Image.open(filename)
+            image_resize = image.resize((25, 25), Image.ANTIALIAS)
+            photo = ImageTk.PhotoImage(image_resize)
+
+            b = Button(overlay, image=photo, command=(lambda x=photo : add_emoji(x, overlay)))
+            b.image = photo
+            b.pack()
+            buttons.append(b)
 
     quit = Button(overlay, text="None", command=overlay.destroy)
     quit.pack()

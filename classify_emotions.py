@@ -79,4 +79,4 @@ def recommend_emojize():
     responses = classify()
     return get_emoji_suggestions(responses)
 
-print(recommend_emojize())
+# print(recommend_emojize())
