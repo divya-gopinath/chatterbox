@@ -1,29 +1,16 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import struct
 
-from emoji_bank import emoji_bank
 from classify_emotions import recommend_emojize
 
 # Source for images: https://emojipedia.org/
 
-app = Tk()
-app.title("Chat Application")
-app.geometry("500x300+200+200")
-
-question_mark = Image.open("emoji_images/question_mark.png").resize((25, 25), Image.ANTIALIAS)
-placeholder = ImageTk.PhotoImage(question_mark)
-emoji_button = Button(app, text="suggestion: ", image=placeholder, compound=RIGHT, command=(lambda : suggest()))
-emoji_button.pack()
-emoji_button.image = placeholder
-
-def suggest():
+def suggest(emoji_button):
     """
     Create overlay to allow users to pick an emoji
     :param emojis: emojis to use in suggestions
     """
     emojis = recommend_emojize()
-    print (emojis)
     overlay = Toplevel()
 
     if emojis == None:
@@ -38,7 +25,7 @@ def suggest():
             image_resize = image.resize((25, 25), Image.ANTIALIAS)
             photo = ImageTk.PhotoImage(image_resize)
 
-            b = Button(overlay, image=photo, command=(lambda x=photo : add_emoji(x, overlay)))
+            b = Button(overlay, image=photo, command=(lambda x=photo : add_emoji(x, overlay, emoji_button)))
             b.image = photo
             b.pack()
             buttons.append(b)
@@ -46,7 +33,7 @@ def suggest():
     quit = Button(overlay, text="None", command=overlay.destroy)
     quit.pack()
 
-def add_emoji(photo, window):
+def add_emoji(photo, window, emoji_button):
     """
     Adds given emoji to the chat application to send
     :param emoji: emoji to add
@@ -55,8 +42,3 @@ def add_emoji(photo, window):
     window.destroy()
     emoji_button.config(image=photo)
     emoji_button.image = photo
-
-b = Button(app, text="Quit", width=20, command=app.destroy)
-b.pack(side='bottom',padx=0,pady=0)
-
-app.mainloop()

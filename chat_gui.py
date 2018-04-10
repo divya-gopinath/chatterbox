@@ -2,16 +2,16 @@
 
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
-import tkinter
+from PIL import Image, ImageTk
+import tkinter as tk
 from emoji_suggestion_gui import suggest
-from emoji_bank import emoji_bank
 
 def receive():
     """Handles receiving of messages."""
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
-            msg_list.insert(tkinter.END, msg)
+            msg_list.insert(tk.END, msg)
         except OSError:  # Possibly client has left the chat.
             break
 
@@ -29,39 +29,41 @@ def on_closing(event=None):
     my_msg.set("{quit}")
     send()
 
-app = tkinter.Tk()
-app.title("Chatter")
+app = tk.Tk()
+app.title("ChatterBox")
 
-messages_frame = tkinter.Frame(app)
-my_msg = tkinter.StringVar()  # For the messages to be sent.
-my_msg.set("Type your messages here.")
-scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages.
-# Following will contain the messages.
-msg_list = tkinter.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
-scrollbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
-msg_list.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
-msg_list.pack()
+messages_frame = tk.Frame(app) # Following will contain the messages.
+scrollbar = tk.Scrollbar(messages_frame)  # To navigate through past messages.
+msg_list = tk.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+msg_list.pack(side=tk.LEFT, fill=tk.BOTH)
 messages_frame.pack()
 
-entry_field = tkinter.Entry(app, textvariable=my_msg)
+my_msg = tk.StringVar()  # For the messages to be sent.
+
+entry_field = tk.Entry(app, textvariable=my_msg)
 entry_field.bind("<Return>", send)
 entry_field.pack()
-send_button = tkinter.Button(app, text="Send", command=send)
+
+send_button = tk.Button(app, text="Send", command=send)
 send_button.pack()
-emoji_location = tkinter.Label(app, text="SUGGESTED EMOJI HERE: ", height=0, width=100)
-emoji_location.pack()
-suggestion_button = tkinter.Button(app, text="CLICK TO SUGGEST", width=20, command=(lambda : suggest(emoji_bank.get("happiness"), emoji_location)))
-suggestion_button.pack()
+
+question_mark = Image.open("emoji_images/question_mark.png").resize((25, 25), Image.ANTIALIAS)
+placeholder = ImageTk.PhotoImage(question_mark)
+emoji_button = tk.Button(app, text="suggestion:", image=placeholder, compound=tk.RIGHT)
+emoji_button.config(command=(lambda : suggest(emoji_button)))
+emoji_button.pack()
+emoji_button.image = placeholder
+
+img_label = tk.Label(app, image=placeholder)
+img_label.pack()
+img_label.image = placeholder
 
 app.protocol("WM_DELETE_WINDOW", on_closing)
 
 #----Now comes the sockets part----
-HOST = input('Enter host: ')
-PORT = input('Enter port: ')
-if not PORT:
-    PORT = 33000
-else:
-    PORT = int(PORT)
+HOST = "127.0.0.1"
+PORT = 33000
 
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
@@ -71,4 +73,4 @@ client_socket.connect(ADDR)
 
 receive_thread = Thread(target=receive)
 receive_thread.start()
-tkinter.mainloop()  # Starts GUI execution.
+app.mainloop()  # Starts GUI execution.
