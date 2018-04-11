@@ -16,5 +16,4 @@ TODO:
 make requirements.txt for pip (?)
 suggest emotion (2?) seconds after receive message -> have button that sends emoji and just update that with new choice
 - don't trigger emotion on a message you sent
-- probably need knowledge of own name
-colors for name
+issue: characters wrap on line break, not full words

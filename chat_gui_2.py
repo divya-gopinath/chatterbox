@@ -3,21 +3,27 @@
 # Source for images: https://emojipedia.org/
 
 import tkinter as tk
+from tkinter.font import Font
 from PIL import Image, ImageTk
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 
 from emoji_bank import emoji_bank
 
+COLORS = ["cyan", "magenta", "green", "blue", "red"]
+
 class Application(tk.Frame):
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.parent = parent
-        self.myEmojis = {}
+        self.user_colors = {}
         self.initUI()
 
     def initUI(self):
+        # self.default_font = Font(family="Helvetica")
+        self.bold_font = Font(weight="bold", family="Courier", size=14)
+
         self.parent.title("ChatterBox")
         self.pack(fill=tk.BOTH, expand=True)
 
@@ -52,31 +58,34 @@ class Application(tk.Frame):
         self.send_btn = tk.Button(self, text="Send", command=self.send)
         self.send_btn.grid(row=6, column=5)
 
-    def update(self, method):
-        if method == 'send':
-            self.area.insert('end', '<You> ' + self.entry.get() + '\r\n')
-            self.area.see('end')
-            self.entry.delete(0, 'end')
-        elif method == "send_emoji":
-            self.area.insert('end', '<You> ' + self.cur_emoji + '\r\n')
-            # self.area.insert('end', '<You> ')
-            # self.area.image_create('end', image=myEmojis[self.cur_emoji])
-            # self.area.insert('end', ' test\r\n')
-        elif method == 'connect':
-            # Create connection to server
-            pass
-
     def receive(self):
         """Handles receiving of messages."""
         while True:
             try:
                 received = client_socket.recv(BUFSIZ).decode("utf8").split('$%')
                 if len(received) == 1:
-                    self.area.insert('end', received[0] + '\r\n')
+                    msg = received[0]
+                    welcome_msg = msg.split('!')[0]
+
+                    if len(welcome_msg.split(' ')) == 2:
+                        self.username = welcome_msg[8:]
+                        self.add_user(self.username)
+                    self.area.insert('end', msg + '\r\n')
+
                 else:
                     name, msg = received
-                    self.area.insert('end', "<" + name + "> " + msg + '\r\n')
-                self.area.see('end')
+                    print (name, msg)
+                    if name not in self.user_colors:
+                        self.add_user(name)
+
+                    row = int(float(self.area.index(tk.END))) - 1
+                    self.area.insert(tk.END, "<" + name + "> ")
+                    start = str(row) + ".0"
+                    end = str(row) + "." + str(2 + len(name))
+                    print (start, end)
+                    self.area.tag_add(name, start, end)
+                    self.area.insert(tk.END, msg + '\r\n')
+
             except OSError:  # Possibly client has left the chat.
                 break
 
@@ -129,6 +138,15 @@ class Application(tk.Frame):
         self.emoji_btn.config(image=photo, command=(lambda : self.send(is_emoji=True)))
         self.emoji_btn.image = photo
         self.emoji_overlay.destroy()
+
+    def add_user(self, name):
+        if name in self.user_colors:
+            print ("already have user")
+            return
+        color = COLORS[ len(self.user_colors) % len(COLORS) ]
+        self.user_colors[name] = color
+        print (self.user_colors)
+        self.area.tag_config(name, foreground=color, font=self.bold_font)
 
 if __name__ == '__main__':
 
