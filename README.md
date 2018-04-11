@@ -13,7 +13,11 @@ Added OpenCV functionality-- call `recommend_emojize() ` in `classify_emotions.p
 
 
 TODO:
+bug when receives multiple messages at a time - things break (when user sends more than one message quickly, so second message sends before first message is received)
+message sending lags sometimes?
+
+Future TODO:
 make requirements.txt for pip (?)
-suggest emotion (2?) seconds after receive message -> have button that sends emoji and just update that with new choice
-- don't trigger emotion on a message you sent
 issue: characters wrap on line break, not full words
+don't allow clicking into text area (currently can type in it)
+handle repeat usernames (most likely don't allow)

@@ -2,6 +2,7 @@
 # Modified from: https://medium.com/swlh/lets-write-a-chat-app-in-python-f6783a9ac170
 # Source for images: https://emojipedia.org/
 
+import time
 import tkinter as tk
 from tkinter.font import Font
 from PIL import Image, ImageTk
@@ -50,8 +51,7 @@ class Application(tk.Frame):
 
         question_mark = Image.open("emoji_images/question_mark.png").resize((25, 25), Image.ANTIALIAS)
         question_mark = ImageTk.PhotoImage(question_mark)
-        self.emoji_btn = tk.Button(self, image=question_mark)
-        self.emoji_btn.config(command=(lambda : self.suggest()))
+        self.emoji_btn = tk.Button(self, image=question_mark, state=tk.DISABLED)
         self.emoji_btn.grid(row=6, column=4)
         self.emoji_btn.image = question_mark
 
@@ -63,6 +63,7 @@ class Application(tk.Frame):
         while True:
             try:
                 received = client_socket.recv(BUFSIZ).decode("utf8").split('$%')
+                # print(received)
                 if len(received) == 1:
                     msg = received[0]
                     welcome_msg = msg.split('!')[0]
@@ -71,29 +72,30 @@ class Application(tk.Frame):
                         self.username = welcome_msg[8:]
                         self.add_user(self.username)
                     self.area.insert('end', msg + '\r\n')
+                    self.area.see('end')
 
                 else:
                     name, msg = received
                     if name not in self.user_colors:
                         self.add_user(name)
-
                     row = int(float(self.area.index(tk.END))) - 1
                     self.area.insert(tk.END, "<" + name + "> ")
                     start = str(row) + ".0"
                     end = str(row) + "." + str(2 + len(name))
                     self.area.tag_add(name, start, end)
                     self.area.insert(tk.END, msg + '\r\n')
-
-                self.area.see('end')
+                    self.area.see('end')
+                    if name != self.username:
+                        self.suggest()
 
             except OSError:  # Possibly client has left the chat.
                 break
 
-    def send(self, event=None, is_emoji=False):  # event is passed by binders.
+    def send(self, event=None, emoji=None):  # event is passed by binders.
         """Handles sending of messages."""
         msg = self.entry.get()
-        if is_emoji:
-            msg = self.cur_emoji
+        if emoji:
+            msg = emoji
         else:
             self.entry.delete(0, 'end')
 
@@ -109,34 +111,43 @@ class Application(tk.Frame):
         self.send()
 
     def suggest(self):
-        """Create overlay to allow users to pick an emoji"""
         # emojis = recommend_emojize()
         emojis = emoji_bank["happiness"]
+        if emojis != None:
+            photo = myEmojis[emojis[0][1:-1]]
+            self.emoji_btn.config(image=photo, command=(lambda : self.popup_emojis()), state=tk.NORMAL)
+            self.emoji_btn.image = photo
+            self.cur_emojis = emojis
+
+
+    def popup_emojis(self):
+        """Create overlay to allow users to pick an emoji"""
         self.emoji_overlay = tk.Toplevel()
 
-        if emojis == None:
+        if self.cur_emojis == None:
             l = tk.Label(self.emoji_overlay, text="no suggestions")
             l.pack()
 
         else:
-            for emoji in emojis:
+            for emoji in self.cur_emojis:
                 photo = myEmojis[emoji[1:-1]]
-                b = tk.Button(self.emoji_overlay, image=photo, command=(lambda x=emoji[1:-1] : self.add_emoji(x)))
+                b = tk.Button(self.emoji_overlay, image=photo, command=(lambda x=emoji[1:-1] : self.send_emoji(x)))
                 b.image = photo
                 b.pack()
 
         quit = tk.Button(self.emoji_overlay, text="None", command=self.emoji_overlay.destroy)
         quit.pack()
 
-    def add_emoji(self, emoji):
+    def send_emoji(self, emoji):
         """
-        Adds given emoji to the chat application to send
+        Sends given emoji in the chat application and updates image on the emoji button
         :param emoji: emoji to add
         """
-        self.cur_emoji = emoji
         photo = myEmojis[emoji]
-        self.emoji_btn.config(image=photo, command=(lambda : self.send(is_emoji=True)))
+        self.emoji_btn.config(image=photo, command=(lambda : self.popup_emojis()), state=tk.NORMAL)
         self.emoji_btn.image = photo
+
+        self.send(emoji=emoji)
         self.emoji_overlay.destroy()
 
     def add_user(self, name):
