@@ -10,6 +10,7 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 
 from emoji_bank import emoji_bank
+from classify_emotions import recommend_emojize
 
 COLORS = ["blue", "magenta", "green", "cyan", "red"]
 
@@ -19,6 +20,7 @@ class Application(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.parent = parent
         self.user_colors = {}
+        self.cur_emojis = None
         self.initUI()
 
     def initUI(self):
@@ -63,7 +65,6 @@ class Application(tk.Frame):
         while True:
             try:
                 received = client_socket.recv(BUFSIZ).decode("utf8").split('$%')
-                # print(received)
                 if len(received) == 1:
                     msg = received[0]
                     welcome_msg = msg.split('!')[0]
@@ -111,9 +112,8 @@ class Application(tk.Frame):
         self.send()
 
     def suggest(self):
-        # emojis = recommend_emojize()
-        emojis = emoji_bank["happiness"]
-        if emojis != None:
+        emojis = recommend_emojize()
+        if emojis != None and emojis != self.cur_emojis:
             photo = myEmojis[emojis[0][1:-1]]
             self.emoji_btn.config(image=photo, command=(lambda : self.popup_emojis()), state=tk.NORMAL)
             self.emoji_btn.image = photo

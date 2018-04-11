@@ -37,9 +37,12 @@ def classify():
             data = f.read()
             response = requests.post(_url, params=params, headers=headers, data=data)
             json = response.json();
-            if (len(json) > 0):
-                info = response.json()[0].get('faceAttributes')  # format response as dict
+            try:
+                info = json[0].get('faceAttributes')  # format response as dict
                 responses.append(info)
+            except (IndexError, KeyError) as e:
+                continue
+
     return responses
 
 def get_emoji_suggestions(responses):
@@ -58,7 +61,10 @@ def get_emoji_suggestions(responses):
         if current_score > best_score:
             best_emotion = current_best
             best_score = current_score
-    return emoji_bank[best_emotion]
+    if best_emotion:
+        return emoji_bank[best_emotion]
+    else:
+        return None
 
 def get_frames(num_frames, delay=0.1):
     """
