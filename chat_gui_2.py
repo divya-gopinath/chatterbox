@@ -10,7 +10,7 @@ from threading import Thread
 
 from emoji_bank import emoji_bank
 
-COLORS = ["cyan", "magenta", "green", "blue", "red"]
+COLORS = ["blue", "magenta", "green", "cyan", "red"]
 
 class Application(tk.Frame):
 
@@ -74,7 +74,6 @@ class Application(tk.Frame):
 
                 else:
                     name, msg = received
-                    print (name, msg)
                     if name not in self.user_colors:
                         self.add_user(name)
 
@@ -82,9 +81,10 @@ class Application(tk.Frame):
                     self.area.insert(tk.END, "<" + name + "> ")
                     start = str(row) + ".0"
                     end = str(row) + "." + str(2 + len(name))
-                    print (start, end)
                     self.area.tag_add(name, start, end)
                     self.area.insert(tk.END, msg + '\r\n')
+
+                self.area.see('end')
 
             except OSError:  # Possibly client has left the chat.
                 break
@@ -145,7 +145,6 @@ class Application(tk.Frame):
             return
         color = COLORS[ len(self.user_colors) % len(COLORS) ]
         self.user_colors[name] = color
-        print (self.user_colors)
         self.area.tag_config(name, foreground=color, font=self.bold_font)
 
 if __name__ == '__main__':
