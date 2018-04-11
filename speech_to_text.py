@@ -11,6 +11,7 @@ def recognize_speech():
     :return: voice translation as a string.
     """
     # obtain audio from the microphone
+    print("HELLO!!!!!!")
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Say something!")
@@ -19,5 +20,7 @@ def recognize_speech():
         return r.recognize_ibm(audio, username=IBM_USERNAME, password=IBM_PASSWORD)
     except sr.UnknownValueError:
         print("IBM Speech to Text could not understand audio")
+        return ""
     except sr.RequestError as e:
         print("Could not request results from IBM Speech to Text service; {0}".format(e))
+        return ""
