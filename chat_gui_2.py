@@ -1,5 +1,7 @@
 # Modified from: https://pastebin.com/F6198iqC
 # Modified from: https://medium.com/swlh/lets-write-a-chat-app-in-python-f6783a9ac170
+# Source for images: https://emojipedia.org/
+
 import tkinter as tk
 from PIL import Image, ImageTk
 from socket import AF_INET, socket, SOCK_STREAM
@@ -30,19 +32,25 @@ class Application(tk.Frame):
         self.area.grid(row=1, column=0, columnspan=6, rowspan=4, sticky=tk.E+tk.W+tk.S+tk.N)
 
         self.lbl2 = tk.Label(self, text='Message')
-        self.lbl2.grid(row=6, column = 0, stick=tk.S+tk.W)
+        self.lbl2.grid(row=6, column=0, stick=tk.W)
         self.entry = tk.Entry(self)
-        self.entry.grid(row=6, column = 1, sticky=tk.S+tk.W)
+        self.entry.grid(row=6, column=1, columnspan=2, sticky=tk.W+tk.E)
 
-        self.send_btn = tk.Button(self, text="Send", command=self.send)
-        self.send_btn.grid(row=6, column=4)
+        microphone = Image.open("emoji_images/microphone.png").resize((25, 25), Image.ANTIALIAS)
+        microphone = ImageTk.PhotoImage(microphone)
+        self.talk_btn = tk.Button(self, image=microphone, command=(lambda : print("speech to text")))
+        self.talk_btn.grid(row=6, column=3)
+        self.talk_btn.image = microphone
 
         question_mark = Image.open("emoji_images/question_mark.png").resize((25, 25), Image.ANTIALIAS)
-        placeholder = ImageTk.PhotoImage(question_mark)
-        self.emoji_btn = tk.Button(self, image=placeholder)
+        question_mark = ImageTk.PhotoImage(question_mark)
+        self.emoji_btn = tk.Button(self, image=question_mark)
         self.emoji_btn.config(command=(lambda : self.suggest()))
-        self.emoji_btn.grid(row=6, column=3)
-        self.emoji_btn.image = placeholder
+        self.emoji_btn.grid(row=6, column=4)
+        self.emoji_btn.image = question_mark
+
+        self.send_btn = tk.Button(self, text="Send", command=self.send)
+        self.send_btn.grid(row=6, column=5)
 
     def update(self, method):
         if method == 'send':
@@ -136,7 +144,7 @@ if __name__ == '__main__':
                 photo = ImageTk.PhotoImage(image_resize)
                 myEmojis[emoji[1:-1]] = photo
 
-    root.geometry("350x300")
+    root.geometry("500x300")
     root.minsize('250', '250')
     app = Application(root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
