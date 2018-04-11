@@ -1,23 +1,27 @@
 # 6835-project
 
-To run the GUI:
-python3 chat_server.py
+## Using the Chat
 
-New terminal tab:
-python3 chat_gui.py
-use 127.0.0.1 as host, don't have to put a port
-Can open as many guis as you want (each in new tabs)
-
-## OpenCV stuff
-Added OpenCV functionality-- call `recommend_emojize() ` in `classify_emotions.py` and you'll see how this works. It'll grab camera data from your webcam (a default of 10 frames collected ever 100ms), make the necessary API calls to classify, and then spit out the suggested emojis (if any) from the emoji bank that I set up in `emoji_bank.py`. I'm using a library called "emojize" so I don't have to deal with a bunch of emoji/unicode issues with the text. The next step is to add a callback function in the GUI such that when you receive a message in your chat, this `recommend_emojize()` function is called. You can see the "suggestion" popup box I quickly made for some demo code on what this popup could look like (find this code in `emoji_suggestion_gui.py`).
+**Run the server:** ```python3 chat_server.py```  
+**Open a GUI:** ```python3 chat_gui.py```
 
 
-TODO:
-bug when receives multiple messages at a time - things break (when user sends more than one message quickly, so second message sends before first message is received)
-message sending lags sometimes?
+### TODO:
+- bug when receives multiple messages at a time - things break (when user sends more than one message quickly, so second message sends before first message is received)
+- message sending lags sometimes?
 
-Future TODO:
-make requirements.txt for pip (?)
-issue: characters wrap on line break, not full words
-don't allow clicking into text area (currently can type in it)
-handle repeat usernames (most likely don't allow)
+### Future TODO:
+- issue: characters wrap on line break, not full words
+- issue: can type in text area where messages appear
+- handle repeat usernames (most likely don't allow)
+- make requirements.txt for pip (?)
+
+#### Current Dependencies
+- pip3 install
+  - Pillow
+  - SpeechRecognition
+  - pyaudio
+  - requests
+- other install (brew)
+  - portaudio (needed for pyaudio)
+  - opencv
