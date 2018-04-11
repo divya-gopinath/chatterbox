@@ -41,8 +41,8 @@ def classify():
                 info = json[0].get('faceAttributes')  # format response as dict
                 responses.append(info)
             except (IndexError, KeyError) as e:
-                continue
-
+                print(response)
+    print(responses)
     return responses
 
 def get_emoji_suggestions(responses):

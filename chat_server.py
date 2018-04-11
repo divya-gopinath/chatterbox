@@ -28,7 +28,7 @@ def handle_client(client):  # Takes client socket as argument.
     while True:
         msg = client.recv(BUFSIZ)
         if msg != bytes("{quit}", "utf8"):
-            broadcast(msg, name+": ")
+            broadcast(msg, name+"$%")
         else:
             client.send(bytes("{quit}", "utf8"))
             client.close()
