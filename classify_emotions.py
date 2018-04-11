@@ -78,5 +78,3 @@ def recommend_emojize():
     get_frames(num_frames)
     responses = classify()
     return get_emoji_suggestions(responses)
-
-# print(recommend_emojize())
