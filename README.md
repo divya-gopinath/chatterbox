@@ -13,5 +13,8 @@ Added OpenCV functionality-- call `recommend_emojize() ` in `classify_emotions.p
 
 
 TODO:
-delete images when done
-make requirements.txt for pip
+make requirements.txt for pip (?)
+suggest emotion (2?) seconds after receive message -> have button that sends emoji and just update that with new choice
+- don't trigger emotion on a message you sent
+- probably need knowledge of own name
+colors for name
