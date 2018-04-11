@@ -11,6 +11,7 @@ from threading import Thread
 
 from emoji_bank import emoji_bank
 from classify_emotions import recommend_emojize
+from speech_to_text import recognize_speech
 
 COLORS = ["blue", "magenta", "green", "cyan", "red"]
 
@@ -47,7 +48,7 @@ class Application(tk.Frame):
 
         microphone = Image.open("emoji_images/microphone.png").resize((25, 25), Image.ANTIALIAS)
         microphone = ImageTk.PhotoImage(microphone)
-        self.talk_btn = tk.Button(self, image=microphone, command=(lambda : print("speech to text")))
+        self.talk_btn = tk.Button(self, image=microphone, command=recognize_speech)
         self.talk_btn.grid(row=6, column=3)
         self.talk_btn.image = microphone
 
