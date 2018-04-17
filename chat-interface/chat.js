@@ -1,5 +1,6 @@
 var USERNAME = ""; // gets set when user signs in
 var CHATTING = false; // switches to true when user signs in
+var MOOD = "neutral";
 
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
@@ -12,9 +13,12 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.signin = document.querySelector("#signin-btn");
   dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
+  dom.popupContent = document.querySelector("#popup-content");
+  dom.emojibtn = document.querySelector("#emoji-btn");
 
   dom.send.addEventListener("click", send);
   dom.signin.addEventListener("click", signin);
+  dom.emojibtn.addEventListener("click", function() { popupEmojis() });
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
   });
@@ -28,6 +32,7 @@ function signin() {
   USERNAME = dom.name.value;
   CHATTING = true;
   dom.popup.style.setProperty("display", "none");
+  dom.popupContent.innerHTML = "";
   dom.input.focus();
 }
 
@@ -53,5 +58,36 @@ function createMsgDiv(user, content) {
   dom.msgs.appendChild(msgDiv);
   dom.msgs.scrollTop = dom.msgs.scrollHeight;
   dom.input.value = "";
+  dom.input.focus();
+}
+
+function popupEmojis(emojis = emojiBank["happiness"]) {
+  emojis = emojiBank[MOOD];
+  if (emojis === null) {
+    for (m in emojiBank) {
+      if (m !== "neutral"){
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji));
+      }
+    }
+  }
+  else {
+    emojis.forEach(emoji => drawEmojiBtn(emoji));
+  }
+  dom.popup.style.setProperty("display", "flex");
+}
+
+function drawEmojiBtn(emoji) {
+  var emojiBtn = document.createElement("button");
+  emojiBtn.textContent = emoji;
+  emojiBtn.addEventListener("click", function() {
+    dom.input.value += emoji;
+    closePopup();
+  });
+  dom.popupContent.appendChild(emojiBtn);
+}
+
+function closePopup() {
+  dom.popup.style.setProperty("display", "none");
+  dom.popupContent.innerHTML = "";
   dom.input.focus();
 }

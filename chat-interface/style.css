@@ -97,8 +97,9 @@ header {
 }
 
   #popup-content {
-    height: 15em;
-    width: 25em;
+    min-height: 15em;
+    min-width: 25em;
+    padding: 2em;
     background-color: rgb(219, 219, 219, 0.9);
     display: flex;
     flex-direction: column;
