@@ -5,20 +5,21 @@ var MOOD = "neutral";
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
 
+// Create socket
+var socket = null;
+
 document.addEventListener("DOMContentLoaded", function() {
   // Create references to static elements
   dom.msgs = document.querySelector("#sent-msgs");
   dom.input = document.querySelector("#msg-input");
-  dom.send = document.querySelector("#send-btn");
-  dom.signin = document.querySelector("#signin-btn");
   dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
   dom.popupContent = document.querySelector("#popup-content");
-  dom.emojibtn = document.querySelector("#emoji-btn");
 
-  dom.send.addEventListener("click", send);
-  dom.signin.addEventListener("click", signin);
-  dom.emojibtn.addEventListener("click", function() { popupEmojis() });
+  document.querySelector("#signin-btn").addEventListener("click", signin);
+  document.querySelector("#emoji-btn").addEventListener("click", popupEmojis);
+  document.querySelector("#send-btn").addEventListener("click", send);
+
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
   });
@@ -26,18 +27,22 @@ document.addEventListener("DOMContentLoaded", function() {
     if (evt.key === "Enter") { signin(); }
   });
   dom.name.focus();
+
+  socket = io();
+  socket.on('chat message', function(msg) {
+    createMsgDiv(msg.user, msg.content);
+  });
+
 });
 
 function signin() {
   USERNAME = dom.name.value;
   CHATTING = true;
-  dom.popup.style.setProperty("display", "none");
-  dom.popupContent.innerHTML = "";
-  dom.input.focus();
+  closePopup();
 }
 
 function send() {
-  createMsgDiv(USERNAME, dom.input.value);
+  socket.emit('chat message', {user: USERNAME, content: dom.input.value});
 }
 
 function createMsgDiv(user, content) {
@@ -61,7 +66,7 @@ function createMsgDiv(user, content) {
   dom.input.focus();
 }
 
-function popupEmojis(emojis = emojiBank["happiness"]) {
+function popupEmojis() {
   emojis = emojiBank[MOOD];
   if (emojis === null) {
     for (m in emojiBank) {

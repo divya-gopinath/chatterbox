@@ -1,0 +1,5 @@
+chat-interface/node_modules/
+chat-interface/package-lock.json
+package-lock.json
+.DS_Store
+__pycache__/

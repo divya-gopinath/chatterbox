@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
   <meta charset="utf-8">
   <title>ChatterBox</title>
   <link rel="icon" href="./emoji-images/grinning_face_with_smiling_eyes.png" type="image/png" />
@@ -9,11 +10,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Load style sheets -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" type="text/css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Oswald">
 
+  <!-- Using Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Load local JS files -->
   <script src="emojiBank.js"></script>
   <script src="chat.js"></script>
+
 </head>
 
 <body>
