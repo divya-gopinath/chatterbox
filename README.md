@@ -2,6 +2,21 @@
 
 ## Using the Chat
 
+### Setup
+1. Install Node.js  
+2. Navigate to directory ```6835-project/chat-interface```
+3. Run ```npm install```
+
+### Running the Chat
+1. Run ```npm start```
+2. Open a browser and go to ```localhost:3000```
+
+#### JS TODO:
+- min-width of messages is currently set by name
+
+
+## OLD (Python) Using the Chat
+
 **Run the server:** ```python3 chat_server.py```  
 **Open a GUI:** ```python3 chat_gui.py```
 
