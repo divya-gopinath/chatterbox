@@ -8,6 +8,7 @@ var NUM_FRAMES = 5;
 var dom = {};
 var width;
 var height;
+var emotionData = [];
 
 // Create socket
 var socket = null;
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
   document.querySelector("#signin-btn").addEventListener("click", signin);
   document.querySelector("#emoji-btn").addEventListener("click", popupEmojis);
   document.querySelector("#send-btn").addEventListener("click", send);
-  document.querySelector("#pic-btn").addEventListener("click", get_face)
+  document.querySelector("#pic-btn").addEventListener("click", function() { get_face(1); })
 
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
@@ -123,10 +124,6 @@ function closePopup() {
   dom.input.focus();
 }
 
-function argMax(array) {
-  return array
-}
-
 function bestEmotion(emotions) {
     var bestEmotion = "neutral"
     var bestScore = 0;
@@ -145,14 +142,14 @@ function bestEmotion(emotions) {
             bestScore = currentScore;
         }
     }
+    emotionData = [];
     MOOD = bestEmotion;
 }
 
-function get_face() {
+function get_face(counter) {
     // take snapshot and get image data
     var canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
-    var emotionData = [];
     // repeat over multiple frames
     Webcam.snap(function(data_uri) {
               base_image = new Image();
@@ -178,9 +175,13 @@ function get_face() {
                       })
                       .done(function(data) {
                         emotionData.push(data[0].faceAttributes.emotion);
-                        console.log(MOOD);
-                        bestEmotion(emotionData);
-                        console.log(MOOD);
+                        if ( counter < NUM_FRAMES ) {
+                            get_face(counter + 1);
+                        } else {
+                            console.log(MOOD);
+                            bestEmotion(emotionData);
+                            console.log(MOOD);
+                        };
                       })
                       .fail(function(err) {
                         console.log(JSON.stringify(data))
