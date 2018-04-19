@@ -4,7 +4,7 @@
 
 ### Setup
 1. Install Node.js  
-2. Navigate to directory ```6835-project/chat-interface```
+2. Navigate to directory ```6835-project```
 3. Run ```npm install```
 
 ### Running the Chat
@@ -17,6 +17,7 @@
 
 ## OLD (Python) Using the Chat
 
+In directory ```6835-project/python_chat```  
 **Run the server:** ```python3 chat_server.py```  
 **Open a GUI:** ```python3 chat_gui.py```
 
