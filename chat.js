@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.input = document.querySelector("#msg-input");
   dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
-  dom.popupContent = document.querySelector("#popup-content");
+  dom.popupContent = document.querySelector(".popup-content");
 
   document.querySelector("#signin-btn").addEventListener("click", signin);
-  document.querySelector("#emoji-btn").addEventListener("click", popupEmojis);
+  document.querySelector("#select-emoji-btn").addEventListener("click", popupEmojis);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#pic-btn").addEventListener("click", function() { get_face(1); })
 
@@ -105,12 +105,14 @@ function popupEmojis() {
   else {
     emojis.forEach(emoji => drawEmojiBtn(emoji));
   }
+  dom.popupContent.setAttribute("id", "emoji-popup");
   dom.popup.style.setProperty("display", "flex");
 }
 
 function drawEmojiBtn(emoji) {
   var emojiBtn = document.createElement("button");
   emojiBtn.textContent = emoji;
+  emojiBtn.setAttribute("class", "emoji-btn");
   emojiBtn.addEventListener("click", function() {
     dom.input.value += emoji;
     closePopup();
