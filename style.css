@@ -60,6 +60,12 @@ header {
       text-align: right;
     }
 
+  .announcement {
+    align-self: center;
+    color: rgb(117, 117, 117);
+    margin: 0.25em 0;
+  }
+
 #footer {
   grid-column: 1 / span 3;
   grid-row: 3;

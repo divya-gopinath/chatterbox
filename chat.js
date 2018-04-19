@@ -39,8 +39,11 @@ document.addEventListener("DOMContentLoaded", function() {
   height = 0; // This will be computed based on the input stream
 
   socket = io();
-  socket.on('chat message', function(msg) {
+  socket.on("chat message", function(msg) {
     createMsgDiv(msg.user, msg.content);
+  });
+  socket.on("announcement", function(msg) {
+    createAnnouncement(msg);
   });
 
   var streaming = false;
@@ -63,11 +66,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+window.addEventListener("unload", function (evt) {
+  if (USERNAME !== "") {
+    socket.emit("signout", USERNAME);
+  }
+});
+
 function signin() {
   var name = dom.name.value;
   if (name !== "") {
-    USERNAME = dom.name.value;
+    USERNAME = name;
     CHATTING = true;
+    socket.emit("signin", name);
     closePopup();
   }
 }
@@ -75,7 +85,7 @@ function signin() {
 function send() {
   var value = dom.input.value;
   if (value !== "") {
-    socket.emit('chat message', {user: USERNAME, content: dom.input.value});
+    socket.emit("chat message", {user: USERNAME, content: dom.input.value});
   }
 }
 
@@ -98,6 +108,15 @@ function createMsgDiv(user, content) {
   dom.msgs.scrollTop = dom.msgs.scrollHeight;
   dom.input.value = "";
   dom.input.focus();
+}
+
+function createAnnouncement(msg) {
+  var msgDiv = document.createElement("div");
+  msgDiv.setAttribute("class", "announcement");
+  msgDiv.textContent = msg;
+
+  dom.msgs.appendChild(msgDiv);
+  dom.msgs.scrollTop = dom.msgs.scrollHeight;
 }
 
 function popupEmojis() {
