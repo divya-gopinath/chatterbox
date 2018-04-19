@@ -64,13 +64,19 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function signin() {
-  USERNAME = dom.name.value;
-  CHATTING = true;
-  closePopup();
+  var name = dom.name.value;
+  if (name !== "") {
+    USERNAME = dom.name.value;
+    CHATTING = true;
+    closePopup();
+  }
 }
 
 function send() {
-  socket.emit('chat message', {user: USERNAME, content: dom.input.value});
+  var value = dom.input.value;
+  if (value !== "") {
+    socket.emit('chat message', {user: USERNAME, content: dom.input.value});
+  }
 }
 
 function createMsgDiv(user, content) {
