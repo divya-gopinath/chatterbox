@@ -3,6 +3,7 @@ var CHATTING = false; // switches to true when user signs in
 var MOOD = "neutral";
 var EMOTIONS = ["contempt", "disgust", "fear", "happiness", "neutral", "sadness", "surprise"];
 var NUM_FRAMES = 5;
+var VOICE_RECORDING = false;
 
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
@@ -20,10 +21,12 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
   dom.popupContent = document.querySelector(".popup-content");
-  dom.selectEmoji = document.querySelector("#select-emoji-btn")
+  dom.selectEmoji = document.querySelector("#select-emoji-btn");
+  dom.voiceToText = document.querySelector("#voice-to-text-btn");
 
   document.querySelector("#signin-btn").addEventListener("click", signin);
   dom.selectEmoji.addEventListener("click", popupEmojis);
+  dom.voiceToText.addEventListener("click", voiceToText);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#pic-btn").addEventListener("click", function() { get_face(1); })
 
@@ -221,4 +224,18 @@ function get_face(counter) {
                   });
             }
     });
-};
+}
+
+function voiceToText() {
+  if (!VOICE_RECORDING) {
+    VOICE_RECORDING = true;
+    dom.voiceToText.textContent = "🔴";
+    // start recording here
+  }
+  else {
+    VOICE_RECORDING = false;
+    dom.voiceToText.textContent = "🎙";
+    dom.input.value += "whatever was recorded";
+    // finish recording here
+  }
+}
