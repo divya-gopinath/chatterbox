@@ -1,7 +1,6 @@
-/*****************************************************************/
-/******** SPEECH RECOGNITION SETUP YOU CAN IGNORE ****************/
-/*****************************************************************/
-var debouncedProcessSpeech = _.debounce(processSpeech, 500);
+var processSpeech = function(transcript) {
+    console.log(transcript);
+};
 
 var recognition = new webkitSpeechRecognition();
 recognition.continuous = true;
@@ -16,15 +15,7 @@ recognition.onresult = function(event) {
     else
       transcript += event.results[i][0].transcript;
   }
-
-  if (DEBUGSPEECH) {
-    if (hasFinal)
-      otherFeedback.setContent("SPEECH DEBUG: ready");
-    else
-      otherFeedback.setContent("SPEECH DEBUG: " + transcript);
-  }
-
-  var processed = debouncedProcessSpeech(transcript);
+  var processed = processSpeech(transcript);
 
   // If we reacted to speech, kill recognition and restart
   if (processed) {
@@ -34,12 +25,7 @@ recognition.onresult = function(event) {
 // Restart recognition if it has stopped
 recognition.onend = function(event) {
   setTimeout(function() {
-    if (DEBUGSPEECH)
-      otherFeedback.setContent("SPEECH DEBUG: ready");
     recognition.start();
-  }, 1000);
+  }, 500);
 };
 recognition.start();
-/*****************************************************************/
-/******** END OF SPEECH RECOG SETUP ******************************/
-/*****************************************************************/
