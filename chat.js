@@ -20,9 +20,10 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
   dom.popupContent = document.querySelector(".popup-content");
+  dom.selectEmoji = document.querySelector("#select-emoji-btn")
 
   document.querySelector("#signin-btn").addEventListener("click", signin);
-  document.querySelector("#select-emoji-btn").addEventListener("click", popupEmojis);
+  dom.selectEmoji.addEventListener("click", popupEmojis);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#pic-btn").addEventListener("click", function() { get_face(1); })
 
@@ -115,6 +116,7 @@ function drawEmojiBtn(emoji) {
   emojiBtn.setAttribute("class", "emoji-btn");
   emojiBtn.addEventListener("click", function() {
     dom.input.value += emoji;
+    dom.selectEmoji.textContent = emoji;
     closePopup();
   });
   dom.popupContent.appendChild(emojiBtn);
@@ -145,6 +147,9 @@ function bestEmotion(emotions) {
         }
     }
     emotionData = [];
+    if (bestEmotion !== MOOD) {
+      dom.selectEmoji.textContent = emojiBank[bestEmotion][0];
+    }
     MOOD = bestEmotion;
 }
 
