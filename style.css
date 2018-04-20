@@ -137,6 +137,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 
   #signin-popup {
@@ -155,3 +156,16 @@ header {
     flex-wrap: wrap;
     max-width: 25em;
   }
+
+    #close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 1em;
+      color: rgb(117, 117, 117);
+    }
+
+    #close-btn:hover {
+      cursor: pointer;
+      color: rgb(100, 100, 100);
+    }
