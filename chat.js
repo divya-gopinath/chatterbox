@@ -230,12 +230,11 @@ function voiceToText() {
   if (!VOICE_RECORDING) {
     VOICE_RECORDING = true;
     dom.voiceToText.textContent = "🔴";
-    // start recording here
+    recognition.start();
   }
   else {
     VOICE_RECORDING = false;
+    recognition.stop();
     dom.voiceToText.textContent = "🎙";
-    dom.input.value += "whatever was recorded";
-    // finish recording here
   }
 }

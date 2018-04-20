@@ -15,17 +15,10 @@ recognition.onresult = function(event) {
     else
       transcript += event.results[i][0].transcript;
   }
-  var processed = processSpeech(transcript);
+  if (transcript!="") { dom.input.value = transcript; }
 
   // If we reacted to speech, kill recognition and restart
-  if (processed) {
+  if (!VOICE_RECORDING) {
     recognition.stop();
   }
 };
-// Restart recognition if it has stopped
-recognition.onend = function(event) {
-  setTimeout(function() {
-    recognition.start();
-  }, 500);
-};
-recognition.start();
