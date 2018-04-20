@@ -10650,17 +10650,16 @@ var mosseFilterResponses = function() {
             }
             var pred = webgazer.util.bound({'x':x/len, 'y':y/len});
 
-            if (store_points_var) {
-              drawCoordinates('blue',pred.x,pred.y); //draws the previous predictions
-              //store the position of the past fifty occuring tracker preditions
-              store_points(pred.x, pred.y, k);
-              k++;
-              if (k == 50) {
-                k = 0;
-              }
-            }
+//            if (store_points_var) {
+//              drawCoordinates('blue',pred.x,pred.y); //draws the previous predictions
+//              //store the position of the past fifty occuring tracker preditions
+//              store_points(pred.x, pred.y, k);
+//              k++;
+//              if (k == 50) {
+//                k = 0;
+//              }
+//            }
             gazeDot.style.transform = 'translate3d(' + pred.x + 'px,' + pred.y + 'px,0)';
-
             //Check that the eyes are inside of the validation box
             checkEyesInValidationBox();
         }
@@ -10924,6 +10923,7 @@ var mosseFilterResponses = function() {
         showGazeDot = bool;
         gazeDot.style.left = '-5px';
         gazeDot.style.display = bool ? 'block' : 'none';
+        console.log("GAZE DOT!!!!")
         return webgazer;
     };
 

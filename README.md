@@ -11,6 +11,13 @@
 1. Run ```npm start```
 2. Open a browser and go to ```localhost:3000```
 
+
+### Working on gaze
+- Press randomly on the screen while looking at the cursor to calibrate (we should eventually make a calibration screen popup)
+- Click the eye button to (supposedly) begin tracking-- right now this isn't fully implemented
+    - Tracking should cause a red dot (```gazeDot``` in the ```WebGazer.js``` code) to appear on the screen
+    - Need to debug and finetune scrolling
+
 #### JS TODO:
 - min-width of messages is currently set by name
 

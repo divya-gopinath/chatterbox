@@ -4,12 +4,14 @@ var MOOD = "neutral";
 var EMOTIONS = ["contempt", "disgust", "fear", "happiness", "neutral", "sadness", "surprise"];
 var NUM_FRAMES = 5;
 var VOICE_RECORDING = false;
+var SCROLL_ACTIVE = false;
 
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
-var width;
-var height;
+var picWidth;
+var picHeight;
 var emotionData = [];
+
 
 // Create socket
 var socket = null;
@@ -23,10 +25,12 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.popupContent = document.querySelector(".popup-content");
   dom.selectEmoji = document.querySelector("#select-emoji-btn");
   dom.voiceToText = document.querySelector("#voice-to-text-btn");
+  dom.scrollToggle = document.querySelector("#scroll-btn");
 
   document.querySelector("#signin-btn").addEventListener("click", signin);
   dom.selectEmoji.addEventListener("click", popupEmojis);
   dom.voiceToText.addEventListener("click", voiceToText);
+  dom.scrollToggle.addEventListener('click', scrollControl);
   document.querySelector("#send-btn").addEventListener("click", send);
 
   dom.input.addEventListener("keydown", function(evt) {
@@ -37,8 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
   });
   dom.name.focus();
 
-  width = 320; // We will scale the photo width to this
-  height = 0; // This will be computed based on the input stream
+  picWidth = 320; // We will scale the photo width to this
+  picHeight = 0; // This will be computed based on the input stream
 
   socket = io();
   socket.on("chat message", function(msg) {
@@ -56,7 +60,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   video = document.getElementById('video');
   canvas = document.getElementById('canvas');
+  camera = document.getElementById('video');
   canvas.style.display = "none";
+  camera.style.display = "none";
 
   Webcam.set({
     width: 320,
@@ -245,4 +251,17 @@ function voiceToText() {
     recognition.stop();
     dom.voiceToText.textContent = "🎙";
   }
+}
+
+function scrollControl() {
+    if (!SCROLL_ACTIVE) {
+        SCROLL_ACTIVE = true;
+        webgazer.showPredictionPoints(true);
+        webgazer.setGazeListener(scrollListenerRef);
+    } else {
+        SCROLL_ACTIVE = false;
+        webgazer.showPredictionPoints(false);
+        webgazer.clearGazeListener();
+    }
+    console.log("SCROLLING: " + SCROLL_ACTIVE);
 }
