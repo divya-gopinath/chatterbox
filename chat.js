@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.selectEmoji.addEventListener("click", popupEmojis);
   dom.voiceToText.addEventListener("click", voiceToText);
   document.querySelector("#send-btn").addEventListener("click", send);
-  document.querySelector("#pic-btn").addEventListener("click", function() { get_face(1); })
 
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
@@ -104,6 +103,7 @@ function createMsgDiv(user, content) {
   var msgDiv = document.createElement("div");
   msgDiv.setAttribute("class", "msg");
   if (user === USERNAME) { msgDiv.classList.add("own-msg"); }
+  else { get_face(1); }
   msgDiv.appendChild(userDiv);
   msgDiv.appendChild(contentDiv);
 
