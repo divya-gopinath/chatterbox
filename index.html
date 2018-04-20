@@ -49,25 +49,26 @@
 <div id="sending-msg">
   <input id="msg-input" type="text" placeholder="Type message here">
   <button id="send-btn">Send</button>
-  <button id="emoji-btn">Emojis</button>
+  <button id="select-emoji-btn" class="emoji-btn">🙂</button>
+  <button id="voice-to-text-btn" class="emoji-btn">🎙</button>
 </div>
 
 <div id="popup">
-  <div id="popup-content">
+  <div class="popup-content" id="signin-popup">
     <h2>Welcome to ChatterBox!</h2>
     <input id="name-input" type="text" placeholder="Please enter a username">
     <button id="signin-btn">Start Chatting</button>
   </div>
-
 </div>
-    <div class="camera">
-      <div id="video" width="320" height="240">Video stream not available.</div>
-      <button id="pic-btn"">Take photo</button>
-    </div>
-    <canvas id="canvas" width="320" height="240"></canvas>
-    <div class="output">
-      <img id="photo">
-    </div>
+
+<div class="camera">
+  <div id="video" width="320" height="240">Video stream not available.</div>
+  <button id="pic-btn">Take photo</button>
+</div>
+<canvas id="canvas" width="320" height="240"></canvas>
+<div class="output">
+  <img id="photo">
+</div>
 
 </body>
 

@@ -60,6 +60,12 @@ header {
       text-align: right;
     }
 
+  .announcement {
+    align-self: center;
+    color: rgb(117, 117, 117);
+    margin: 0.25em 0;
+  }
+
 #footer {
   grid-column: 1 / span 3;
   grid-row: 3;
@@ -70,6 +76,9 @@ header {
   grid-column: 2;
   grid-row: 3;
   padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
   input {
@@ -77,10 +86,36 @@ header {
     font-size: 1em;
     border: 1px rgb(117, 117, 117) solid;
     padding: 0.25em 0.5em;
+    margin: 0 0.25em;
   }
 
   #msg-input {
+    flex-grow: 1;
+  }
 
+  button {
+    font-family: 'Lato', sans-serif;
+    font-size: 1em;
+    border: 1px rgb(117, 117, 117) solid;
+    padding: 0.25em 0.5em;
+    margin: 0 0.25em;
+  }
+
+  button:hover {
+    cursor: pointer;
+    background-color: rgb(240, 240, 240)
+  }
+
+  .emoji-btn {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    font-size: 1.5em;
+    margin: 0.2em 0.25em 0em;
+  }
+
+  .emoji-btn:hover {
+    background-color: transparent;
   }
 
 #popup {
@@ -96,18 +131,27 @@ header {
   justify-content: center;
 }
 
-  #popup-content {
-    min-height: 15em;
-    min-width: 25em;
+  .popup-content {
     padding: 2em;
     background-color: rgb(219, 219, 219, 0.9);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  #name-input {
-    width: 15em;
-    margin-bottom: 0.5em;
+  #signin-popup {
+    flex-direction: column;
+    min-height: 15em;
+    min-width: 25em;
+  }
+
+    #name-input {
+      width: 15em;
+      margin-bottom: 0.5em;
+    }
+
+  #emoji-popup {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 25em;
   }

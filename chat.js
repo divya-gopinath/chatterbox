@@ -3,6 +3,7 @@ var CHATTING = false; // switches to true when user signs in
 var MOOD = "neutral";
 var EMOTIONS = ["contempt", "disgust", "fear", "happiness", "neutral", "sadness", "surprise"];
 var NUM_FRAMES = 5;
+var VOICE_RECORDING = false;
 
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
@@ -19,10 +20,13 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.input = document.querySelector("#msg-input");
   dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
-  dom.popupContent = document.querySelector("#popup-content");
+  dom.popupContent = document.querySelector(".popup-content");
+  dom.selectEmoji = document.querySelector("#select-emoji-btn");
+  dom.voiceToText = document.querySelector("#voice-to-text-btn");
 
   document.querySelector("#signin-btn").addEventListener("click", signin);
-  document.querySelector("#emoji-btn").addEventListener("click", popupEmojis);
+  dom.selectEmoji.addEventListener("click", popupEmojis);
+  dom.voiceToText.addEventListener("click", voiceToText);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#pic-btn").addEventListener("click", function() { get_face(1); })
 
@@ -38,8 +42,11 @@ document.addEventListener("DOMContentLoaded", function() {
   height = 0; // This will be computed based on the input stream
 
   socket = io();
-  socket.on('chat message', function(msg) {
+  socket.on("chat message", function(msg) {
     createMsgDiv(msg.user, msg.content);
+  });
+  socket.on("announcement", function(msg) {
+    createAnnouncement(msg);
   });
 
   var streaming = false;
@@ -62,14 +69,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+window.addEventListener("unload", function (evt) {
+  if (USERNAME !== "") {
+    socket.emit("signout", USERNAME);
+  }
+});
+
 function signin() {
-  USERNAME = dom.name.value;
-  CHATTING = true;
-  closePopup();
+  var name = dom.name.value;
+  if (name !== "") {
+    USERNAME = name;
+    CHATTING = true;
+    socket.emit("signin", name);
+    closePopup();
+  }
 }
 
 function send() {
-  socket.emit('chat message', {user: USERNAME, content: dom.input.value});
+  var value = dom.input.value;
+  if (value !== "") {
+    socket.emit("chat message", {user: USERNAME, content: dom.input.value});
+  }
 }
 
 function createMsgDiv(user, content) {
@@ -93,6 +113,15 @@ function createMsgDiv(user, content) {
   dom.input.focus();
 }
 
+function createAnnouncement(msg) {
+  var msgDiv = document.createElement("div");
+  msgDiv.setAttribute("class", "announcement");
+  msgDiv.textContent = msg;
+
+  dom.msgs.appendChild(msgDiv);
+  dom.msgs.scrollTop = dom.msgs.scrollHeight;
+}
+
 function popupEmojis() {
   emojis = emojiBank[MOOD];
   if (emojis === null) {
@@ -105,14 +134,17 @@ function popupEmojis() {
   else {
     emojis.forEach(emoji => drawEmojiBtn(emoji));
   }
+  dom.popupContent.setAttribute("id", "emoji-popup");
   dom.popup.style.setProperty("display", "flex");
 }
 
 function drawEmojiBtn(emoji) {
   var emojiBtn = document.createElement("button");
   emojiBtn.textContent = emoji;
+  emojiBtn.setAttribute("class", "emoji-btn");
   emojiBtn.addEventListener("click", function() {
     dom.input.value += emoji;
+    dom.selectEmoji.textContent = emoji;
     closePopup();
   });
   dom.popupContent.appendChild(emojiBtn);
@@ -143,6 +175,9 @@ function bestEmotion(emotions) {
         }
     }
     emotionData = [];
+    if (bestEmotion !== MOOD) {
+      dom.selectEmoji.textContent = emojiBank[bestEmotion][0];
+    }
     MOOD = bestEmotion;
 }
 
@@ -189,4 +224,18 @@ function get_face(counter) {
                   });
             }
     });
-};
+}
+
+function voiceToText() {
+  if (!VOICE_RECORDING) {
+    VOICE_RECORDING = true;
+    dom.voiceToText.textContent = "🔴";
+    // start recording here
+  }
+  else {
+    VOICE_RECORDING = false;
+    dom.voiceToText.textContent = "🎙";
+    dom.input.value += "whatever was recorded";
+    // finish recording here
+  }
+}
