@@ -122,6 +122,7 @@ var scrollListenerRef;
       var yNext = easePerc * dy + yStart;
 
       // scroll to next
+      console.log("TRYING TO SCROLL!!!!!!!!!!!!!!!!!!!!")
       window.scrollTo(xNext, yNext);
 
       if (tPerc < 1) {
