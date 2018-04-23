@@ -123,7 +123,10 @@ var scrollListenerRef;
 
       // scroll to next
       console.log("TRYING TO SCROLL!!!!!!!!!!!!!!!!!!!!")
-      window.scrollTo(xNext, yNext);
+      console.log(xNext, yNext);
+      if (yNext >= 0) { scrollChat("up"); }
+      else { scrollChat("down"); }
+      // window.scrollTo(xNext, yNext);
 
       if (tPerc < 1) {
         window.requestAnimationFrame(animate);

@@ -265,3 +265,14 @@ function scrollControl() {
     }
     console.log("SCROLLING: " + SCROLL_ACTIVE);
 }
+
+function scrollChat(direction) {
+  var scrollDistance = 10;
+  if (direction === "up") {
+    console.log("up");
+    dom.msgs.scrollTop -= scrollDistance;
+  } else if (direction === "down") {
+    console.log("down");
+    dom.msgs.scrollTop += scrollDistance;
+  }
+}
