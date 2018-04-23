@@ -20,14 +20,15 @@ document.addEventListener("DOMContentLoaded", function() {
   // Create references to static elements
   dom.msgs = document.querySelector("#sent-msgs");
   dom.input = document.querySelector("#msg-input");
-  dom.name = document.querySelector("#name-input");
   dom.popup = document.querySelector("#popup");
   dom.popupContent = document.querySelector(".popup-content");
   dom.selectEmoji = document.querySelector("#select-emoji-btn");
   dom.voiceToText = document.querySelector("#voice-to-text-btn");
   dom.scrollToggle = document.querySelector("#scroll-btn");
 
-  document.querySelector("#signin-btn").addEventListener("click", signin);
+  createCalibrationPopup();
+
+  // Add event listeners to static elements
   dom.selectEmoji.addEventListener("click", popupEmojis);
   dom.voiceToText.addEventListener("click", voiceToText);
   dom.scrollToggle.addEventListener('click', scrollControl);
@@ -36,10 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
   });
-  dom.name.addEventListener("keydown", function(evt) {
-    if (evt.key === "Enter") { signin(); }
-  });
-  dom.name.focus();
 
   picWidth = 320; // We will scale the photo width to this
   picHeight = 0; // This will be computed based on the input stream
@@ -95,6 +92,86 @@ function send() {
   if (value !== "") {
     socket.emit("chat message", {user: USERNAME, content: dom.input.value});
   }
+}
+
+function createCalibrationPopup() {
+  dom.popupContent.setAttribute("id", "calibration-popup");
+  var clickCounter = 0;
+
+  function progressCalibration(curRow, curCol) {
+    console.log(curRow, curCol, clickCounter);
+    if (clickCounter === 5) {
+      console.log("in first if");
+      clickCounter = 0;
+      var curBtn = document.querySelector(`#calibrate-${curRow}-${curCol}`);
+      curBtn.textContent = "😄";
+      curBtn.setAttribute("disabled", "true");
+
+      // Create next calibration button
+      if (curRow === 3 && curCol === 3) { // end of calibration
+        dom.popupContent.innerHTML = "";
+        createSignIn();
+      }
+      else {
+        console.log("in else")
+        var nextRow; var nextCol;
+        if (curCol === 3) { // end of columns, so move to next row
+          nextRow = curRow + 1;
+          nextCol = 1;
+        } else { // move to next column
+          console.log("moving columns");
+          nextRow = curRow;
+          nextCol = curCol + 1;
+        }
+        createCalibrationBtn(nextRow, nextCol);
+      }
+    }
+  }
+
+  // Create the buttons that will be clicked to callibrate
+  function createCalibrationBtn(row, col) {
+    console.log("creating a button at ", row, col);
+    var btn = document.createElement("button");
+    btn.textContent = "😭";
+    btn.setAttribute("class", "emoji-btn calibration-btn");
+    btn.setAttribute("id", `calibrate-${row}-${col}`);
+    btn.addEventListener("click", function() {
+      clickCounter += 1
+      progressCalibration(row, col)
+    });
+    btn.style.setProperty("grid-row", row);
+    btn.style.setProperty("grid-column", col);
+    dom.popupContent.appendChild(btn);
+  }
+
+  createCalibrationBtn(1, 1);
+}
+
+function createSignIn() {
+  var header = document.createElement("h2");
+  header.textContent = "Welcome to ChatterBox!";
+
+  var nameInput = document.createElement("input");
+  nameInput.setAttribute("type", "text");
+  nameInput.setAttribute("placeholder", "Please enter a username");
+  nameInput.setAttribute("id", "name-input");
+  nameInput.addEventListener("keydown", function(evt) {
+    if (evt.key === "Enter") { signin(); }
+  });
+  dom.name = nameInput;
+  dom.name.focus();
+
+  var signinButton = document.createElement("button");
+  signinButton.textContent = "Start Chatting";
+  signinButton.setAttribute("id", "signin-btn");
+  signinButton.addEventListener("click", signin);
+
+  dom.popupContent.appendChild(header);
+  dom.popupContent.appendChild(nameInput);
+  dom.popupContent.appendChild(signinButton);
+  dom.popupContent.setAttribute("id", "signin-popup");
+
+  dom.popup.style.setProperty("display", "flex");
 }
 
 function createMsgDiv(user, content) {

@@ -140,6 +140,19 @@ header {
     position: relative;
   }
 
+  #calibration-popup {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 90%;
+    width: 90%;
+    padding: 0;
+  }
+
+    .calibration-btn:focus {
+      outline: none;
+    }
+
   #signin-popup {
     flex-direction: column;
     min-height: 15em;

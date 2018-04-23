@@ -22,6 +22,7 @@
 
 #### JS TODO:
 - min-width of messages is currently set by name
+- change "i have joined" to welcome message
 
 
 ## OLD (Python) Using the Chat
