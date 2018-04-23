@@ -140,6 +140,14 @@ function popupEmojis() {
   else {
     emojis.forEach(emoji => drawEmojiBtn(emoji));
   }
+
+  var closeBtn = document.createElement("button");
+  closeBtn.textContent = "✖";
+  closeBtn.setAttribute("class", "emoji-btn");
+  closeBtn.setAttribute("id", "close-btn");
+  closeBtn.addEventListener("click", closePopup);
+  dom.popupContent.appendChild(closeBtn);
+
   dom.popupContent.setAttribute("id", "emoji-popup");
   dom.popup.style.setProperty("display", "flex");
 }
