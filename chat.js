@@ -109,9 +109,11 @@ function createCalibrationPopup() {
 
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
-        dom.popupContent.innerHTML = "";
-        if (!CHATTING) { createSignIn(); }
-        else { closePopup(); }
+        setTimeout(function() {
+          dom.popupContent.innerHTML = "";
+          if (!CHATTING) { createSignIn(); }
+          else { closePopup(); }
+        }, 1000);
       }
       else {
         var nextRow; var nextCol;
@@ -147,7 +149,10 @@ function createCalibrationPopup() {
 
 function createSignIn() {
   var header = document.createElement("h2");
-  header.textContent = "Calibration is done! Please sign in to use ChatterBox!";
+  header.textContent = "Calibration is done!"
+
+  var header2 = document.createElement("h3");
+  header2.textContent = "Please sign in to use ChatterBox.";
 
   var nameInput = document.createElement("input");
   nameInput.setAttribute("type", "text");
@@ -165,6 +170,7 @@ function createSignIn() {
   signinButton.addEventListener("click", signin);
 
   dom.popupContent.appendChild(header);
+  dom.popupContent.appendChild(header2);
   dom.popupContent.appendChild(nameInput);
   dom.popupContent.appendChild(signinButton);
   dom.popupContent.setAttribute("id", "signin-popup");
@@ -197,7 +203,14 @@ function createMsgDiv(user, content) {
 function createAnnouncement(msg) {
   var msgDiv = document.createElement("div");
   msgDiv.setAttribute("class", "announcement");
-  msgDiv.textContent = msg;
+
+  if (msg.substring(msg.length - 21) === " has joined the chat!"
+      && msg.substring(0, msg.length - 21) === USERNAME) {
+    msgDiv.textContent = `Welcome to ChatterBox, ${USERNAME}!`;
+  }
+  else {
+    msgDiv.textContent = msg;
+  }
 
   dom.msgs.appendChild(msgDiv);
   dom.msgs.scrollTop = dom.msgs.scrollHeight;
@@ -302,9 +315,9 @@ function get_face(counter) {
                         if ( counter < NUM_FRAMES ) {
                             get_face(counter + 1);
                         } else {
-                            console.log(MOOD);
+                            // console.log(MOOD);
                             bestEmotion(emotionData);
-                            console.log(MOOD);
+                            // console.log(MOOD);
                         };
                       })
                       .fail(function(err) {
@@ -338,16 +351,15 @@ function scrollControl() {
         webgazer.showPredictionPoints(false);
         webgazer.clearGazeListener();
     }
-    console.log("SCROLLING: " + SCROLL_ACTIVE);
+    // console.log("SCROLLING: " + SCROLL_ACTIVE);
 }
 
 function scrollChat(direction) {
   var scrollDistance = 10;
   if (direction === "up") {
-    console.log("up");
     dom.msgs.scrollTop -= scrollDistance;
-  } else if (direction === "down") {
-    console.log("down");
+  }
+  else if (direction === "down") {
     dom.msgs.scrollTop += scrollDistance;
   }
 }
