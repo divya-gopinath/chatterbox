@@ -122,8 +122,8 @@ var scrollListenerRef;
       var yNext = easePerc * dy + yStart;
 
       // scroll to next
-      console.log("TRYING TO SCROLL!!!!!!!!!!!!!!!!!!!!")
-      console.log(xNext, yNext);
+      // console.log("TRYING TO SCROLL!!!!!!!!!!!!!!!!!!!!")
+      // console.log(xNext, yNext);
       if (yNext < 0) { scrollChat("up"); }
       else if (yNext > 0) { scrollChat("down") };
       // no scrolling if yNext === 0
