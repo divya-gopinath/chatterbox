@@ -20,34 +20,14 @@
     - Tracking should cause a red dot (```gazeDot``` in the ```WebGazer.js``` code) to appear on the screen
     - Need to debug and finetune scrolling -- something is printed when scroll event triggered
 
-#### JS TODO:
-- min-width of messages is currently set by name
+#### JS TODO Pre-Demo:
+- create welcome & end screen for calibration popup
 - change "i have joined" to welcome message
+- create "Recalibrate button"
+- remove console log buttons
 
-
-## OLD (Python) Using the Chat
-
-In directory ```6835-project/python_chat```  
-**Run the server:** ```python3 chat_server.py```  
-**Open a GUI:** ```python3 chat_gui.py```
-
-
-### TODO:
-- bug when receives multiple messages at a time - things break (when user sends more than one message quickly, so second message sends before first message is received)
-- message sending lags sometimes?
-
-### Future TODO:
-- issue: characters wrap on line break, not full words
-- issue: can type in text area where messages appear
-- handle repeat usernames (most likely don't allow)
-- make requirements.txt for pip (?)
-
-#### Current Dependencies
-- pip3 install
-  - Pillow
-  - SpeechRecognition
-  - pyaudio
-  - requests
-- other install (brew)
-  - portaudio (needed for pyaudio)
-  - opencv
+#### JS TODO:
+- get rid of popup on page load
+- min-width of messages is currently set by name
+- disable scrolling when typing
+- add X button to calibration popup (Besides first one)

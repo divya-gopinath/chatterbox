@@ -37,16 +37,9 @@
   <h1>chatterbox</h1>
 </header>
 
-<div id="sent-msgs">
-  <div class="msg">
-    <div class="msg-user">Mary</div>
-    <div class="msg-content">chat text 😀</div>
-  </div>
-  <div class="msg">
-    <div class="msg-user">Divya</div>
-    <div class="msg-content">another chat 😂</div>
-  </div>
-</div>
+<button id="recalibrate-btn">Recalibrate</button>
+
+<div id="sent-msgs"></div>
 
 <div id="footer"></div>
 <div id="sending-msg">
@@ -58,7 +51,11 @@
 </div>
 
 <div id="popup">
-  <div class="popup-content" id="signin-popup"></div>
+  <div class="popup-content" id="welcome-popup">
+    <h2>Welcome to ChatterBox!</h2>
+    <p>To calibrate the gaze tracking software, please click each sad face 😭 5 times while looking at it in order to turn it into a happy face 😄.</p>
+    <button id="continue-btn">Continue to Calibration</button>
+  </div>
 </div>
 
 <div class="camera">

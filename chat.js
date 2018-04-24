@@ -26,13 +26,13 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.voiceToText = document.querySelector("#voice-to-text-btn");
   dom.scrollToggle = document.querySelector("#scroll-btn");
 
-  createCalibrationPopup();
-
   // Add event listeners to static elements
   dom.selectEmoji.addEventListener("click", popupEmojis);
   dom.voiceToText.addEventListener("click", voiceToText);
   dom.scrollToggle.addEventListener('click', scrollControl);
   document.querySelector("#send-btn").addEventListener("click", send);
+  document.querySelector("#recalibrate-btn").addEventListener("click", createCalibrationPopup);
+  document.querySelector("#continue-btn").addEventListener("click", createCalibrationPopup);
 
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
@@ -95,31 +95,30 @@ function send() {
 }
 
 function createCalibrationPopup() {
+  dom.popup.style.setProperty("display", "flex");
+  dom.popupContent.innerHTML = "";
   dom.popupContent.setAttribute("id", "calibration-popup");
   var clickCounter = 0;
 
   function progressCalibration(curRow, curCol) {
-    console.log(curRow, curCol, clickCounter);
     if (clickCounter === 5) {
-      console.log("in first if");
       clickCounter = 0;
       var curBtn = document.querySelector(`#calibrate-${curRow}-${curCol}`);
       curBtn.textContent = "😄";
-      curBtn.setAttribute("disabled", "true");
+      curBtn.disabled = true;
 
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
         dom.popupContent.innerHTML = "";
-        createSignIn();
+        if (!CHATTING) { createSignIn(); }
+        else { closePopup(); }
       }
       else {
-        console.log("in else")
         var nextRow; var nextCol;
         if (curCol === 3) { // end of columns, so move to next row
           nextRow = curRow + 1;
           nextCol = 1;
         } else { // move to next column
-          console.log("moving columns");
           nextRow = curRow;
           nextCol = curCol + 1;
         }
@@ -130,7 +129,6 @@ function createCalibrationPopup() {
 
   // Create the buttons that will be clicked to callibrate
   function createCalibrationBtn(row, col) {
-    console.log("creating a button at ", row, col);
     var btn = document.createElement("button");
     btn.textContent = "😭";
     btn.setAttribute("class", "emoji-btn calibration-btn");
@@ -149,7 +147,7 @@ function createCalibrationPopup() {
 
 function createSignIn() {
   var header = document.createElement("h2");
-  header.textContent = "Welcome to ChatterBox!";
+  header.textContent = "Calibration is done! Please sign in to use ChatterBox!";
 
   var nameInput = document.createElement("input");
   nameInput.setAttribute("type", "text");
