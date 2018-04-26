@@ -183,10 +183,30 @@ header {
     }
 
   #emoji-popup {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     max-width: 25em;
   }
+
+    #suggested-list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    hr {
+      height: 1px;
+      width: 100%;
+      background-color: rgb(117, 117, 117);
+      border: none;
+    }
+
+    #emoji-list {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
 
     #close-btn {
       position: absolute;

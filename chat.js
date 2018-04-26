@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.scrollToggle.addEventListener('click', scrollControl);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#recalibrate-btn").addEventListener("click", createCalibrationPopup);
-  document.querySelector("#continue-btn").addEventListener("click", createCalibrationPopup);
+  document.querySelector("#continue-btn").addEventListener("click", createSignIn);
 
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
@@ -162,7 +162,6 @@ function createSignIn() {
     if (evt.key === "Enter") { signin(); }
   });
   dom.name = nameInput;
-  dom.name.focus();
 
   var signinButton = document.createElement("button");
   signinButton.textContent = "Start Chatting";
@@ -176,9 +175,12 @@ function createSignIn() {
   dom.popupContent.setAttribute("id", "signin-popup");
 
   dom.popup.style.setProperty("display", "flex");
+  dom.name.focus();
 }
 
 function createMsgDiv(user, content) {
+  if (!CHATTING) { return; }
+
   var userDiv = document.createElement("div");
   userDiv.setAttribute("class", "msg-user");
   userDiv.textContent = user;
@@ -217,17 +219,37 @@ function createAnnouncement(msg) {
 }
 
 function popupEmojis() {
-  emojis = emojiBank[MOOD];
-  if (emojis === null) {
+  var emojiList = document.createElement("div");
+  emojiList.setAttribute("id", "emoji-list");
+
+  if (MOOD === "neutral") {
     for (m in emojiBank) {
-      if (m !== "neutral"){
-        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji));
+      if (m !== "neutral") {
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList));
       }
     }
   }
   else {
-    emojis.forEach(emoji => drawEmojiBtn(emoji));
+    var suggestedList = document.createElement("div");
+    suggestedList.setAttribute("id", "suggested-list");
+
+    var suggText = document.createElement("div");
+    suggText.textContent = "Suggestions: ";
+    suggestedList.appendChild(suggText);
+
+    emojiBank[MOOD].forEach(emoji => drawEmojiBtn(emoji, suggestedList));
+
+    dom.popupContent.appendChild(suggestedList);
+    dom.popupContent.append(document.createElement("hr"));
+
+    for (m in emojiBank) {
+      if (m !== "neutral" && m !== MOOD) {
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList));
+      }
+    }
   }
+
+  dom.popupContent.appendChild(emojiList);
 
   var closeBtn = document.createElement("button");
   closeBtn.textContent = "✖";
@@ -240,7 +262,7 @@ function popupEmojis() {
   dom.popup.style.setProperty("display", "flex");
 }
 
-function drawEmojiBtn(emoji) {
+function drawEmojiBtn(emoji, appendTo) {
   var emojiBtn = document.createElement("button");
   emojiBtn.textContent = emoji;
   emojiBtn.setAttribute("class", "emoji-btn");
@@ -249,7 +271,7 @@ function drawEmojiBtn(emoji) {
     dom.selectEmoji.textContent = emoji;
     closePopup();
   });
-  dom.popupContent.appendChild(emojiBtn);
+  appendTo.appendChild(emojiBtn);
 }
 
 function closePopup() {
