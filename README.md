@@ -30,7 +30,7 @@
 - get rid of popup on page load
 - min-width of messages is currently set by name
 - disable scrolling when typing
-- add X button to calibration popup (Besides first one)
+- ~~add X button to calibration popup (Besides first one)~~
 - Make robust to same usernames (esp welcome message)
 - Look at saving gaze calibration data for multiple sessions?
 - remove gaze tracking and voice recording on popup (specifically recalibrate)

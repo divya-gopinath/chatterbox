@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.scrollToggle.addEventListener('click', scrollControl);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#recalibrate-btn").addEventListener("click", createCalibrationPopup);
-  document.querySelector("#continue-btn").addEventListener("click", createSignIn);
+  document.querySelector("#continue-btn").addEventListener("click", createCalibrationPopup);
 
   dom.input.addEventListener("keydown", function(evt) {
     if (evt.key === "Enter") { send(); }
@@ -98,6 +98,9 @@ function createCalibrationPopup() {
   dom.popup.style.setProperty("display", "flex");
   dom.popupContent.innerHTML = "";
   dom.popupContent.setAttribute("id", "calibration-popup");
+
+  if (CHATTING) { createCloseBtn(dom.popupContent); }
+
   var clickCounter = 0;
 
   function progressCalibration(curRow, curCol) {
@@ -251,12 +254,7 @@ function popupEmojis() {
 
   dom.popupContent.appendChild(emojiList);
 
-  var closeBtn = document.createElement("button");
-  closeBtn.textContent = "✖";
-  closeBtn.setAttribute("class", "emoji-btn");
-  closeBtn.setAttribute("id", "close-btn");
-  closeBtn.addEventListener("click", closePopup);
-  dom.popupContent.appendChild(closeBtn);
+  createCloseBtn(dom.popupContent);
 
   dom.popupContent.setAttribute("id", "emoji-popup");
   dom.popup.style.setProperty("display", "flex");
@@ -272,6 +270,15 @@ function drawEmojiBtn(emoji, appendTo) {
     closePopup();
   });
   appendTo.appendChild(emojiBtn);
+}
+
+function createCloseBtn(appendTo) {
+  var closeBtn = document.createElement("button");
+  closeBtn.textContent = "✖";
+  closeBtn.setAttribute("class", "emoji-btn");
+  closeBtn.setAttribute("id", "close-btn");
+  closeBtn.addEventListener("click", closePopup);
+  appendTo.appendChild(closeBtn);
 }
 
 function closePopup() {
