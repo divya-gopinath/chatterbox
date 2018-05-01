@@ -21,13 +21,16 @@
     - Need to debug and finetune scrolling -- something is printed when scroll event triggered
 
 #### JS TODO Pre-Demo:
-- create welcome & end screen for calibration popup
-- change "i have joined" to welcome message
-- create "Recalibrate button"
-- remove console log buttons
+- ~~create welcome & end screen for calibration popup~~
+- ~~change "i have joined" to welcome message~~
+- ~~create "Recalibrate button"~~
+- ~~remove console logs~~
 
 #### JS TODO:
-- get rid of popup on page load
+- ~~get rid of popup on page load~~
 - min-width of messages is currently set by name
 - disable scrolling when typing
-- add X button to calibration popup (Besides first one)
+- ~~add X button to calibration popup (Besides first one)~~
+- Make robust to same usernames (esp welcome message)
+- Look at saving gaze calibration data for multiple sessions?
+- remove gaze tracking and voice recording on popup (specifically recalibrate)

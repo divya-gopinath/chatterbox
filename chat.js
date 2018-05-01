@@ -98,10 +98,12 @@ function createCalibrationPopup() {
   dom.popup.style.setProperty("display", "flex");
   dom.popupContent.innerHTML = "";
   dom.popupContent.setAttribute("id", "calibration-popup");
-  var clickCounter = 0;
 
+  if (CHATTING) { createCloseBtn(dom.popupContent); }
+
+  var clickCounter = 0;
+  var startTime = Date.now();
   function progressCalibration(curRow, curCol) {
-    var startTime = Date.now();
     if (clickCounter === 5) {
       clickCounter = 0;
       var curBtn = document.querySelector(`#calibrate-${curRow}-${curCol}`);
@@ -110,10 +112,12 @@ function createCalibrationPopup() {
 
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
-        dom.popupContent.innerHTML = "";
-        console.log("======USERTEST=====\n Calibration took " + (Date.now() - startTime)/1000. + " seconds.");
-        if (!CHATTING) { createSignIn(); }
-        else { closePopup(); }
+        setTimeout(function() {
+          dom.popupContent.innerHTML = "";
+          console.log("======USERTEST=====\n Calibration took " + (Date.now() - startTime)/1000. + " seconds.");
+          if (!CHATTING) { createSignIn(); }
+          else { closePopup(); }
+        }, 1000);
       }
       else {
         var nextRow; var nextCol;
@@ -149,7 +153,10 @@ function createCalibrationPopup() {
 
 function createSignIn() {
   var header = document.createElement("h2");
-  header.textContent = "Calibration is done! Please sign in to use ChatterBox!";
+  header.textContent = "Calibration is done!"
+
+  var header2 = document.createElement("h3");
+  header2.textContent = "Please sign in to use ChatterBox.";
 
   var nameInput = document.createElement("input");
   nameInput.setAttribute("type", "text");
@@ -159,7 +166,6 @@ function createSignIn() {
     if (evt.key === "Enter") { signin(); }
   });
   dom.name = nameInput;
-  dom.name.focus();
 
   var signinButton = document.createElement("button");
   signinButton.textContent = "Start Chatting";
@@ -167,14 +173,18 @@ function createSignIn() {
   signinButton.addEventListener("click", signin);
 
   dom.popupContent.appendChild(header);
+  dom.popupContent.appendChild(header2);
   dom.popupContent.appendChild(nameInput);
   dom.popupContent.appendChild(signinButton);
   dom.popupContent.setAttribute("id", "signin-popup");
 
   dom.popup.style.setProperty("display", "flex");
+  dom.name.focus();
 }
 
 function createMsgDiv(user, content) {
+  if (!CHATTING) { return; }
+
   var userDiv = document.createElement("div");
   userDiv.setAttribute("class", "msg-user");
   userDiv.textContent = user;
@@ -199,37 +209,59 @@ function createMsgDiv(user, content) {
 function createAnnouncement(msg) {
   var msgDiv = document.createElement("div");
   msgDiv.setAttribute("class", "announcement");
-  msgDiv.textContent = msg;
+
+  if (msg.substring(msg.length - 21) === " has joined the chat!"
+      && msg.substring(0, msg.length - 21) === USERNAME) {
+    msgDiv.textContent = `Welcome to ChatterBox, ${USERNAME}!`;
+  }
+  else {
+    msgDiv.textContent = msg;
+  }
 
   dom.msgs.appendChild(msgDiv);
   dom.msgs.scrollTop = dom.msgs.scrollHeight;
 }
 
 function popupEmojis() {
-  emojis = emojiBank[MOOD];
-  if (emojis === null) {
+  var emojiList = document.createElement("div");
+  emojiList.setAttribute("id", "emoji-list");
+
+  if (MOOD === "neutral") {
     for (m in emojiBank) {
-      if (m !== "neutral"){
-        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji));
+      if (m !== "neutral") {
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList));
       }
     }
   }
   else {
-    emojis.forEach(emoji => drawEmojiBtn(emoji));
+    var suggestedList = document.createElement("div");
+    suggestedList.setAttribute("id", "suggested-list");
+
+    var suggText = document.createElement("div");
+    suggText.textContent = "Suggestions: ";
+    suggestedList.appendChild(suggText);
+
+    emojiBank[MOOD].forEach(emoji => drawEmojiBtn(emoji, suggestedList));
+
+    dom.popupContent.appendChild(suggestedList);
+    dom.popupContent.append(document.createElement("hr"));
+
+    for (m in emojiBank) {
+      if (m !== "neutral" && m !== MOOD) {
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList));
+      }
+    }
   }
 
-  var closeBtn = document.createElement("button");
-  closeBtn.textContent = "✖";
-  closeBtn.setAttribute("class", "emoji-btn");
-  closeBtn.setAttribute("id", "close-btn");
-  closeBtn.addEventListener("click", closePopup);
-  dom.popupContent.appendChild(closeBtn);
+  dom.popupContent.appendChild(emojiList);
+
+  createCloseBtn(dom.popupContent);
 
   dom.popupContent.setAttribute("id", "emoji-popup");
   dom.popup.style.setProperty("display", "flex");
 }
 
-function drawEmojiBtn(emoji) {
+function drawEmojiBtn(emoji, appendTo) {
   var emojiBtn = document.createElement("button");
   emojiBtn.textContent = emoji;
   emojiBtn.setAttribute("class", "emoji-btn");
@@ -238,7 +270,16 @@ function drawEmojiBtn(emoji) {
     dom.selectEmoji.textContent = emoji;
     closePopup();
   });
-  dom.popupContent.appendChild(emojiBtn);
+  appendTo.appendChild(emojiBtn);
+}
+
+function createCloseBtn(appendTo) {
+  var closeBtn = document.createElement("button");
+  closeBtn.textContent = "✖";
+  closeBtn.setAttribute("class", "emoji-btn");
+  closeBtn.setAttribute("id", "close-btn");
+  closeBtn.addEventListener("click", closePopup);
+  appendTo.appendChild(closeBtn);
 }
 
 function closePopup() {
@@ -304,9 +345,9 @@ function get_face(counter) {
                         if ( counter < NUM_FRAMES ) {
                             get_face(counter + 1);
                         } else {
-                            console.log(MOOD);
+                            // console.log(MOOD);
                             bestEmotion(emotionData);
-                            console.log(MOOD);
+                            // console.log(MOOD);
                         };
                       })
                       .fail(function(err) {
@@ -340,16 +381,15 @@ function scrollControl() {
         webgazer.showPredictionPoints(false);
         webgazer.clearGazeListener();
     }
-    console.log("SCROLLING: " + SCROLL_ACTIVE);
+    // console.log("SCROLLING: " + SCROLL_ACTIVE);
 }
 
 function scrollChat(direction) {
   var scrollDistance = 10;
   if (direction === "up") {
-    console.log("up");
     dom.msgs.scrollTop -= scrollDistance;
-  } else if (direction === "down") {
-    console.log("down");
+  }
+  else if (direction === "down") {
     dom.msgs.scrollTop += scrollDistance;
   }
 }
