@@ -101,6 +101,7 @@ function createCalibrationPopup() {
   var clickCounter = 0;
 
   function progressCalibration(curRow, curCol) {
+    var startTime = Date.now();
     if (clickCounter === 5) {
       clickCounter = 0;
       var curBtn = document.querySelector(`#calibrate-${curRow}-${curCol}`);
@@ -110,6 +111,7 @@ function createCalibrationPopup() {
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
         dom.popupContent.innerHTML = "";
+        console.log("======USERTEST=====\n Calibration took " + (Date.now() - startTime)/1000. + " seconds.");
         if (!CHATTING) { createSignIn(); }
         else { closePopup(); }
       }
