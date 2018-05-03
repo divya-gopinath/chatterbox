@@ -117,7 +117,12 @@ function createCalibrationPopup() {
           var audio = new Audio('calibrate_snd.mp3');
           audio.play();
           dom.popupContent.innerHTML = "";
-          console.log("======USERTEST=====\n Calibration took " + (Date.now() - startTime)/1000. + " seconds.");
+
+          document.dispatchEvent(new CustomEvent('log', { detail: {
+            name: "calibrate",
+            info: {"length":  (Date.now() - startTime)/1000. },
+          }}));
+
           if (!CHATTING) { createSignIn(); }
           else { closePopup(); }
         }, 1000);
@@ -320,6 +325,12 @@ function bestEmotion(emotions) {
     if (bestEmotion !== MOOD) {
       dom.selectEmoji.textContent = emojiBank[bestEmotion][0];
     }
+
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "setMood",
+      info: {"fromMood": MOOD, "toMood": bestEmotion},
+    }}));
+
     MOOD = bestEmotion;
 }
 
@@ -355,9 +366,7 @@ function get_face(counter) {
                         if ( counter < NUM_FRAMES ) {
                             get_face(counter + 1);
                         } else {
-                            // console.log(MOOD);
                             bestEmotion(emotionData);
-                            // console.log(MOOD);
                         };
                       })
                       .fail(function(err) {
@@ -375,29 +384,53 @@ function voiceToText() {
     var audio = new Audio('record_snd.mp3');
     audio.play();
     recognition.start();
+
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "startRecording",
+      info: {},
+    }}));
   }
   else {
     VOICE_RECORDING = false;
     recognition.stop();
     dom.voiceToText.textContent = "🎙";
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "endRecording",
+      info: {"content": dom.input.value},
+    }}));
   }
 }
 
 function scrollControl() {
-    if (!SCROLL_ACTIVE) {
-        SCROLL_ACTIVE = true;
-        webgazer.showPredictionPoints(true);
-        webgazer.setGazeListener(scrollListenerRef);
-    } else {
-        SCROLL_ACTIVE = false;
-        webgazer.showPredictionPoints(false);
-        webgazer.clearGazeListener();
-    }
-    // console.log("SCROLLING: " + SCROLL_ACTIVE);
+  if (!SCROLL_ACTIVE) {
+    SCROLL_ACTIVE = true;
+    webgazer.showPredictionPoints(true);
+    webgazer.setGazeListener(scrollListenerRef);
+
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "startTrackingGaze",
+      info: {},
+    }}));
+  } else {
+    SCROLL_ACTIVE = false;
+    webgazer.showPredictionPoints(false);
+    webgazer.clearGazeListener();
+
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "endTrackingGaze",
+      info: {},
+    }}));
+  }
 }
 
 function scrollChat(direction) {
   var scrollDistance = 10;
+
+  document.dispatchEvent(new CustomEvent('log', { detail: {
+    name: "scroll",
+    info: {"direction": direction},
+  }}));
+
   if (direction === "up") {
     dom.msgs.scrollTop -= scrollDistance;
   }
