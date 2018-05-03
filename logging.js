@@ -12,16 +12,11 @@
 var ENABLE_NETWORK_LOGGING = true; // Controls network logging.
 var ENABLE_CONSOLE_LOGGING = true; // Controls console logging.
 var USER_NUMBER = '0';             // Change this for each user test. 0 = debugging
-
-// These event types are intercepted for logging before jQuery handlers.
-var EVENT_TYPES_TO_LOG = {
-	mousedown: true,
-	keydown: true
-};
+var LOG_MOUSEDOWN = false;
 
 // These event properties are copied to the log if present.
 var EVENT_PROPERTIES_TO_LOG = {
-	which: true,
+	// which: true,
 	pageX: true,
 	pageY: true
 };
@@ -29,12 +24,14 @@ var EVENT_PROPERTIES_TO_LOG = {
 (function() {
 	// Hooks up all the event listeners.
 	function hookEventsToLog() {
-		// Set up low-level event capturing.  This intercepts all
+		// Set up low-level mousedown event capturing.  This intercepts all
 		// native events before they bubble, so we log the state
 		// *before* normal event processing.
-		for (var event_type in EVENT_TYPES_TO_LOG) {
-			document.addEventListener(event_type, logEvent, true);
-		}
+    document.addEventListener("mousedown", function(evt) {
+      if (LOG_MOUSEDOWN) {
+        logEvent(evt);
+      }
+    }, true);
 
 		// Once the page is loaded, show our own unique id.
     document.addEventListener("DOMContentLoaded", function () {

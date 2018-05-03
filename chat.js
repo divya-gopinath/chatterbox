@@ -43,11 +43,21 @@ document.addEventListener("DOMContentLoaded", function() {
   picHeight = 0; // This will be computed based on the input stream
 
   socket = io();
+
   socket.on("chat message", function(msg) {
     createMsgDiv(msg.user, msg.content);
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "receiveMsg",
+      info: {"from": msg.user, "content": msg.content},
+    }}));
   });
+
   socket.on("announcement", function(msg) {
     createAnnouncement(msg);
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "receiveAnnounce",
+      info: {"content": msg},
+    }}));
   });
 
   var streaming = false;
@@ -93,9 +103,16 @@ function send() {
   if (value !== "") {
     socket.emit("chat message", {user: USERNAME, content: dom.input.value});
   }
+
+  document.dispatchEvent(new CustomEvent('log', { detail: {
+    name: 'sendMsg',
+    info: {"content": dom.input.value}
+  }}));
 }
 
 function createCalibrationPopup() {
+  LOG_MOUSEDOWN = true;
+
   dom.popup.style.setProperty("display", "flex");
   dom.popupContent.innerHTML = "";
   dom.popupContent.setAttribute("id", "calibration-popup");
@@ -126,6 +143,7 @@ function createCalibrationPopup() {
           if (!CHATTING) { createSignIn(); }
           else { closePopup(); }
         }, 1000);
+        LOG_MOUSEDOWN = false;
       }
       else {
         var nextRow; var nextCol;
@@ -238,13 +256,18 @@ function createAnnouncement(msg) {
 }
 
 function popupEmojis() {
+  document.dispatchEvent(new CustomEvent('log', { detail: {
+    name: 'popupEmoji',
+    info: {},
+  }}));
+
   var emojiList = document.createElement("div");
   emojiList.setAttribute("id", "emoji-list");
 
   if (MOOD === "neutral") {
     for (m in emojiBank) {
       if (m !== "neutral") {
-        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList));
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList, false));
       }
     }
   }
@@ -256,14 +279,14 @@ function popupEmojis() {
     suggText.textContent = "Suggestions: ";
     suggestedList.appendChild(suggText);
 
-    emojiBank[MOOD].forEach(emoji => drawEmojiBtn(emoji, suggestedList));
+    emojiBank[MOOD].forEach(emoji => drawEmojiBtn(emoji, suggestedList, true));
 
     dom.popupContent.appendChild(suggestedList);
     dom.popupContent.append(document.createElement("hr"));
 
     for (m in emojiBank) {
       if (m !== "neutral" && m !== MOOD) {
-        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList));
+        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList, false));
       }
     }
   }
@@ -276,15 +299,21 @@ function popupEmojis() {
   dom.popup.style.setProperty("display", "flex");
 }
 
-function drawEmojiBtn(emoji, appendTo) {
+function drawEmojiBtn(emoji, appendTo, isSuggested) {
   var emojiBtn = document.createElement("button");
   emojiBtn.textContent = emoji;
   emojiBtn.setAttribute("class", "emoji-btn");
+
   emojiBtn.addEventListener("click", function() {
     dom.input.value += emoji;
     dom.selectEmoji.textContent = emoji;
     closePopup();
+    document.dispatchEvent(new CustomEvent('log', { detail: {
+      name: "chooseEmoji",
+      info: {"chosen": emoji, "curMood": MOOD, "isSuggested": isSuggested},
+    }}));
   });
+
   appendTo.appendChild(emojiBtn);
 }
 
