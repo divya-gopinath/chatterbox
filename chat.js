@@ -6,6 +6,7 @@ var NUM_FRAMES = 5;
 var VOICE_RECORDING = false;
 var SCROLL_ACTIVE = false;
 
+
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
 var picWidth;
@@ -113,6 +114,8 @@ function createCalibrationPopup() {
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
         setTimeout(function() {
+          var audio = new Audio('calibrate_snd.mp3');
+          audio.play();
           dom.popupContent.innerHTML = "";
           console.log("======USERTEST=====\n Calibration took " + (Date.now() - startTime)/1000. + " seconds.");
           if (!CHATTING) { createSignIn(); }
@@ -128,6 +131,8 @@ function createCalibrationPopup() {
           nextRow = curRow;
           nextCol = curCol + 1;
         }
+        var audio = new Audio('calibrate_snd.mp3');
+        audio.play();
         createCalibrationBtn(nextRow, nextCol);
       }
     }
@@ -146,6 +151,7 @@ function createCalibrationPopup() {
     btn.style.setProperty("grid-row", row);
     btn.style.setProperty("grid-column", col);
     dom.popupContent.appendChild(btn);
+
   }
 
   createCalibrationBtn(1, 1);
@@ -196,7 +202,11 @@ function createMsgDiv(user, content) {
   var msgDiv = document.createElement("div");
   msgDiv.setAttribute("class", "msg");
   if (user === USERNAME) { msgDiv.classList.add("own-msg"); }
-  else { get_face(1); }
+  else {
+    get_face(1);
+    var audio = new Audio('receive_snd.mp3');
+    audio.play();
+  }
   msgDiv.appendChild(userDiv);
   msgDiv.appendChild(contentDiv);
 
@@ -362,6 +372,8 @@ function voiceToText() {
   if (!VOICE_RECORDING) {
     VOICE_RECORDING = true;
     dom.voiceToText.textContent = "🔴";
+    var audio = new Audio('record_snd.mp3');
+    audio.play();
     recognition.start();
   }
   else {
