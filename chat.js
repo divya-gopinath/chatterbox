@@ -356,7 +356,7 @@ function get_face(counter) {
                         url: "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect" + "?" + $.param(params),
                         contentType: "application/octet-stream",
                         headers: {
-                          'Ocp-Apim-Subscription-Key': '22160d79804c420385ce0e3bae138790'
+                          'Ocp-Apim-Subscription-Key': 'aa8dc9560e8c4fba855f65862b996195'
                         },
                         processData: false,
                         data: blobData
