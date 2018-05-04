@@ -94,6 +94,8 @@ function signin() {
     USERNAME = name;
     CHATTING = true;
     socket.emit("signin", name);
+    var audio = new Audio('calibrate_snd.mp3');
+    audio.play();
     closePopup();
   }
 }
@@ -131,8 +133,6 @@ function createCalibrationPopup() {
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
         setTimeout(function() {
-          var audio = new Audio('calibrate_snd.mp3');
-          audio.play();
           dom.popupContent.innerHTML = "";
 
           document.dispatchEvent(new CustomEvent('log', { detail: {
