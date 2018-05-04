@@ -11,7 +11,6 @@
 
 var ENABLE_NETWORK_LOGGING = true; // Controls network logging.
 var ENABLE_CONSOLE_LOGGING = true; // Controls console logging.
-var USER_NUMBER = '0';             // Change this for each user test. 0 = debugging
 var LOG_MOUSEDOWN = false;
 
 // These event properties are copied to the log if present.
@@ -22,6 +21,8 @@ var EVENT_PROPERTIES_TO_LOG = {
 };
 
 (function() {
+	var uid = getUniqueId();
+
 	// Hooks up all the event listeners.
 	function hookEventsToLog() {
 		// Set up low-level mousedown event capturing.  This intercepts all
@@ -35,7 +36,7 @@ var EVENT_PROPERTIES_TO_LOG = {
 
 		// Once the page is loaded, show our own unique id.
     document.addEventListener("DOMContentLoaded", function () {
-      console.log('Logging as USER_NUMBER: ', USER_NUMBER);
+      console.log('Logging with uid: ', uid);
     });
 
     // Listen to 'log' events which are triggered anywhere in the document.
@@ -78,6 +79,31 @@ var EVENT_PROPERTIES_TO_LOG = {
 		return desc.join('');
 	}
 
+	// Parse user agent string by looking for recognized substring.
+	function findFirstString(str, choices) {
+		for (var j = 0; j < choices.length; j++) {
+			if (str.indexOf(choices[j]) >= 0) {
+				return choices[j];
+			}
+		}
+		return '?';
+	}
+
+	// Genrates or remembers a somewhat-unique ID with distilled user-agent info.
+	function getUniqueId() {
+		if (!('uid' in localStorage)) {
+			var browser = findFirstString(navigator.userAgent, [
+				'Seamonkey', 'Firefox', 'Chromium', 'Chrome', 'Safari', 'OPR', 'Opera',
+				'Edge', 'MSIE', 'Blink', 'Webkit', 'Gecko', 'Trident', 'Mozilla']);
+			var os = findFirstString(navigator.userAgent, [
+				'Android', 'iOS', 'Symbian', 'Blackberry', 'Windows Phone', 'Windows',
+				'OS X', 'Linux', 'iOS', 'CrOS']).replace(/ /g, '_');
+			var unique = ('' + Math.random()).substr(2);
+			localStorage['uid'] = os + '-' + browser + '-' + unique;
+		}
+		return localStorage['uid'];
+	}
+
 	// Log the given event.
 	function logEvent(event, customName, customInfo) {
 		var time = (new Date).getTime();
@@ -104,10 +130,10 @@ var EVENT_PROPERTIES_TO_LOG = {
 		}
 
 		if (ENABLE_CONSOLE_LOGGING) {
-			console.log(USER_NUMBER, time, name, target, info);
+			console.log(uid, time, name, target, info);
 		}
 		if (ENABLE_NETWORK_LOGGING) {
-			sendLogging(USER_NUMBER, time, name, target, info);
+			sendLogging(uid, time, name, target, info);
 		}
 	}
 
