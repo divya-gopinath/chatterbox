@@ -105,11 +105,11 @@ function send() {
   if (value !== "") {
     socket.emit("chat message", {user: USERNAME, content: dom.input.value});
   }
-
   document.dispatchEvent(new CustomEvent('log', { detail: {
     name: 'sendMsg',
     info: {"content": dom.input.value}
   }}));
+  dom.input.value = "";
 }
 
 function createCalibrationPopup() {
@@ -235,7 +235,6 @@ function createMsgDiv(user, content) {
 
   dom.msgs.appendChild(msgDiv);
   dom.msgs.scrollTop = dom.msgs.scrollHeight;
-  dom.input.value = "";
   dom.input.focus();
 }
 
