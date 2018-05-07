@@ -94,6 +94,8 @@ function signin() {
     USERNAME = name;
     CHATTING = true;
     socket.emit("signin", name);
+    var audio = new Audio('calibrate_snd.mp3');
+    audio.play();
     closePopup();
   }
 }
@@ -103,11 +105,11 @@ function send() {
   if (value !== "") {
     socket.emit("chat message", {user: USERNAME, content: dom.input.value});
   }
-
   document.dispatchEvent(new CustomEvent('log', { detail: {
     name: 'sendMsg',
     info: {"content": dom.input.value}
   }}));
+  dom.input.value = "";
 }
 
 function createCalibrationPopup() {
@@ -131,8 +133,6 @@ function createCalibrationPopup() {
       // Create next calibration button
       if (curRow === 3 && curCol === 3) { // end of calibration
         setTimeout(function() {
-          var audio = new Audio('calibrate_snd.mp3');
-          audio.play();
           dom.popupContent.innerHTML = "";
 
           document.dispatchEvent(new CustomEvent('log', { detail: {
@@ -235,7 +235,6 @@ function createMsgDiv(user, content) {
 
   dom.msgs.appendChild(msgDiv);
   dom.msgs.scrollTop = dom.msgs.scrollHeight;
-  dom.input.value = "";
   dom.input.focus();
 }
 
