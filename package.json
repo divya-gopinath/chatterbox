@@ -2,6 +2,9 @@
   "name": "ChatterBox",
   "version": "0.0.1",
   "description": "a multimodal chat app",
+  "engines": {
+    "node": "9.4.0"
+  },
   "dependencies": {
     "express": "^4.15.2",
     "socket.io": "^1.7.3"
