@@ -131,7 +131,7 @@ function createCalibrationPopup() {
       curBtn.disabled = true;
 
       // Create next calibration button
-      if (curRow === 3 && curCol === 3) { // end of calibration
+      if (curRow === 3 && curCol === 5) { // end of calibration
         setTimeout(function() {
           dom.popupContent.innerHTML = "";
 
@@ -147,12 +147,18 @@ function createCalibrationPopup() {
       }
       else {
         var nextRow; var nextCol;
-        if (curCol === 3) { // end of columns, so move to next row
+        if (curCol === 5) { // end of columns, so move to next row
           nextRow = curRow + 1;
           nextCol = 1;
         } else { // move to next column
           nextRow = curRow;
-          nextCol = curCol + 1;
+          if (curRow === 2) { // only want 3 calibration points in middle row
+            nextCol = curCol + 2;
+          }
+          else {
+            nextCol = curCol + 1;
+          }
+
         }
         var audio = new Audio('calibrate_snd.mp3');
         audio.play();
