@@ -22,7 +22,7 @@ recognition.onresult = function(event) {
             dom.input.value = transcript.slice(0, -12);
             send();
             canSend = false;
-            setTimeout(function() { canSend = true; }, 500);
+            setTimeout(function() { canSend = true; }, 1000);
         }
     } else { dom.input.value = transcript; }
   }
