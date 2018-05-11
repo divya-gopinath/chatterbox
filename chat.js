@@ -51,13 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (faces.length > 0) {
         var face = faces[0]; // take the first face in frame
         var emoji = face.emojis.dominantEmoji == "☺" ? "🙂" : face.emojis.dominantEmoji;
-        if (emoji != "😐" || DEVIATE_MOOD) {
-            dom.selectEmoji.textContent = emoji;
-            if (emoji != "😐") {
-                DEVIATE_MOOD = false;
-                setTimeout(function() { DEVIATE_MOOD = true; }, 5000); // only go back to neutral after 5 seconds
-            }
-        }
         var bestScore = 0;
         EMOTIONS.forEach(function(emotion) {
             var score = face.emotions[emotion];
@@ -66,6 +59,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 bestScore = score;
             }
         })
+        if (emoji != "😐" || DEVIATE_MOOD) {
+            dom.selectEmoji.textContent = emoji;
+            if (emoji != "😐") {
+                DEVIATE_MOOD = false;
+                setTimeout(function() { DEVIATE_MOOD = true; }, 5000); // only go back to neutral after 5 seconds
+            } else { MOOD = "neutral"; }
+        }
     }
   });
 
