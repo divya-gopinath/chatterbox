@@ -6,6 +6,7 @@ var EMOTIONS = ["contempt", "disgust", "fear", "joy", "anger", "sadness", "surpr
 var NUM_FRAMES = 5;
 var VOICE_RECORDING = false;
 var SCROLL_ACTIVE = false;
+var EMOJI_TO_WORD = {}
 
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 MOOD = emotion;
                 bestScore = score;
             }
-        })
+        });
         if (emoji != "😐" || DEVIATE_MOOD) {
             dom.selectEmoji.textContent = emoji;
             if (emoji != "😐") {
@@ -264,30 +265,21 @@ function popupEmojis() {
   var emojiList = document.createElement("div");
   emojiList.setAttribute("id", "emoji-list");
 
-  if (MOOD === "neutral") {
-    for (m in emojiBank) {
-      if (m !== "neutral") {
-        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList, false));
-      }
-    }
-  }
-  else {
-    var suggestedList = document.createElement("div");
-    suggestedList.setAttribute("id", "suggested-list");
+  var suggestedList = document.createElement("div");
+  suggestedList.setAttribute("id", "suggested-list");
 
-    var suggText = document.createElement("div");
-    suggText.textContent = "Suggestions: ";
-    suggestedList.appendChild(suggText);
+  var suggText = document.createElement("div");
+  suggText.textContent = "Suggestions: ";
+  suggestedList.appendChild(suggText);
 
-    emojiBank[MOOD].forEach(emoji => drawEmojiBtn(emoji, suggestedList, true));
+  emojiBank[MOOD].forEach(emoji => drawEmojiBtn(emoji, suggestedList, true));
 
-    dom.popupContent.appendChild(suggestedList);
-    dom.popupContent.append(document.createElement("hr"));
+  dom.popupContent.appendChild(suggestedList);
+  dom.popupContent.append(document.createElement("hr"));
 
-    for (m in emojiBank) {
-      if (m !== "neutral" && m !== MOOD) {
-        emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList, false));
-      }
+  for (m in emojiBank) {
+    if (m !== "neutral" && m !== MOOD) {
+      emojiBank[m].forEach(emoji => drawEmojiBtn(emoji, emojiList, false));
     }
   }
 
