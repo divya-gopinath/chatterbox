@@ -13,6 +13,8 @@
 | `speech.js`     | Processes speech using `webkitSpeechRecognition` API |
 | `style.css`     | Provides styling to the interface. |
 | `WebGazer.js`   | Sourced from <https://webgazer.cs.brown.edu/> and used to implement gaze tracking.  |
+| `python_chat/`  | Python 3 code from initial implementation. Filenames are similar to those described above. |
+| `sounds/`       | Sounds used to provide auditory feedback  |
 
 
 ## Using the Chat
@@ -28,11 +30,10 @@
 
 Or go to <https://agile-citadel-17828.herokuapp.com/>.
 
-Works best in a well-lit area, with the laptop on a desk or table so that the webcam is closer to eye level than it would be from a user's lap.
+Runs on modern web browsers: Chrome, Firefox, Edge. Tested on Windows and Mac. Works best in a well-lit area, with the laptop on a desk or table so that the webcam is closer to eye level than it would be from a user's lap.
 
 
 ### Running the Python Chat
-1. TODO: Install dependencies
-2. Navigate to directory `python_chat`
-3. Run the server: `python3 chat_server.py`
-4. Open a GUI: `python3 chat_gui.py`
+1. Navigate to directory `python_chat`
+2. Run the server: `python3 chat_server.py`
+3. Open a GUI: `python3 chat_gui.py`
