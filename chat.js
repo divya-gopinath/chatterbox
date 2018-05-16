@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.scrollToggle.addEventListener('click', scrollControl);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#recalibrate-btn").addEventListener("click", createCalibrationPopup);
-  document.querySelector("#continue-btn").addEventListener("click", createSignIn);
+  document.querySelector("#continue-btn").addEventListener("click", createCalibrationPopup);
   dom.affectiva.style.display = "none";
 
   dom.input.addEventListener("keydown", function(evt) {
@@ -51,11 +51,9 @@ document.addEventListener("DOMContentLoaded", function() {
     if (faces.length > 0) {
       var face = faces[0]; // take the first face in frame
       var emoji = face.emojis.dominantEmoji == "☺" ? "🙂" : face.emojis.dominantEmoji;
+
       var bestScore = 0;
       var bestEmotion = "";
-      console.log(emoji);
-      console.log(face.emojis);
-      console.log(face.emotions);
       EMOTIONS.forEach(function(emotion) {
         var score = face.emotions[emotion];
         if (score > bestScore) {
@@ -82,12 +80,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  //Add a callback to notify when camera access is allowed
+  // Add a callback to notify when camera access is allowed
   detector.addEventListener("onWebcamConnectSuccess", function() {
     console.log("Webcam access allowed");
   });
 
-  //Add a callback to notify when camera access is denied
+  // Add a callback to notify when camera access is denied
   detector.addEventListener("onWebcamConnectFailure", function() {
     console.log("Webcam access denied");
   });
@@ -104,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   detector.start();
 
-
 });
 
 window.addEventListener("unload", function (evt) {
@@ -119,7 +116,7 @@ function signin() {
     USERNAME = name;
     CHATTING = true;
     socket.emit("signin", name);
-    var audio = new Audio('calibrate_snd.mp3');
+    var audio = new Audio('sounds/calibrate_snd.mp3');
     audio.play();
     closePopup();
   }
@@ -173,7 +170,7 @@ function createCalibrationPopup() {
           }
 
         }
-        var audio = new Audio('calibrate_snd.mp3');
+        var audio = new Audio('sounds/calibrate_snd.mp3');
         audio.play();
         createCalibrationBtn(nextRow, nextCol);
       }
@@ -193,7 +190,6 @@ function createCalibrationPopup() {
     btn.style.setProperty("grid-row", row);
     btn.style.setProperty("grid-column", col);
     dom.popupContent.appendChild(btn);
-
   }
 
   createCalibrationBtn(1, 1);
@@ -245,8 +241,8 @@ function createMsgDiv(user, content) {
   msgDiv.setAttribute("class", "msg");
   if (user === USERNAME) { msgDiv.classList.add("own-msg"); }
   else {
-    get_face(1);
-    var audio = new Audio('receive_snd.mp3');
+    // get_face(1); // refers to Microsoft Azure API code
+    var audio = new Audio('sounds/receive_snd.mp3');
     audio.play();
   }
   msgDiv.appendChild(userDiv);
@@ -336,7 +332,7 @@ function voiceToText() {
   if (!VOICE_RECORDING) {
     VOICE_RECORDING = true;
     dom.voiceToText.textContent = "🔴";
-    var audio = new Audio('record_snd.mp3');
+    var audio = new Audio('sounds/record_snd.mp3');
     audio.play();
     recognition.start();
   }

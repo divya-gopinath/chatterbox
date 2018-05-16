@@ -3,7 +3,6 @@
 ## Table of Contents
 | Filename        | Description |
 | --------------- | ----------- |
-| `affectiva.js`  | Uses the Affectiva Emotion SDK for classifying facial expressions with an emoji and an emotion. |
 | `chat.js`       | Modifies `index.html` depending on the state of the application. Combines `speech.js`, `scroll.js`, `affectiva.js`, and `logging.js` into the interface. |
 | `chatServer.js` | Starts and runs a Node.js server using Express. |
 | `emojiBank.js`  | Contains a dictionary used to suggest emojis based on the emotion classification. |
