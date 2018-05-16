@@ -3,7 +3,7 @@
 ## Table of Contents
 | Filename        | Description |
 | --------------- | ----------- |
-| `chat.js`       | Modifies `index.html` depending on the state of the application. Combines `speech.js`, `scroll.js`, `affectiva.js`, and `logging.js` into the interface. |
+| `chat.js`       | Modifies `index.html` depending on the state of the application. Combines `speech.js`, `scroll.js`, and `logging.js` into the interface. |
 | `chatServer.js` | Starts and runs a Node.js server using Express. |
 | `emojiBank.js`  | Contains a dictionary used to suggest emojis based on the emotion classification. |
 | `index.html`    | Initial layout of the interface. Modified using `chat.js` |
@@ -33,7 +33,8 @@ Or go to <https://agile-citadel-17828.herokuapp.com/>.
 Runs on Chrome, Firefox, and Edge. Tested on Windows, Linux, and Mac. Works best in a well-lit area, with the laptop on a desk or table so that the webcam is closer to eye level than it would be from a user's lap.
 
 
-### Running the Python Chat
+### Running the Deprecated Python Chat
+From initial implementation. Not improved past Prototype Studio.
 1. Navigate to directory `python_chat`
 2. Run the server: `python3 chat_server.py`
 3. Open a GUI: `python3 chat_gui.py`
