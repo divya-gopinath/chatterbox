@@ -171,12 +171,32 @@ header {
 
   #calibration-popup {
     display: grid;
-    grid-template-rows: 2em 1fr 2em;
-    grid-template-columns: 2em 1fr 2em 1fr 2em;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     height: 95%;
     width: 95%;
     padding: 0;
   }
+
+    .row-1 {
+      align-self: start;
+    }
+
+    .row-3 {
+      align-self: end;
+    }
+
+    .col-1, .col-2 {
+      justify-self: start;
+    }
+
+    .col-4, .col-5 {
+      justify-self: end;
+    }
+
+    .calibration-btn {
+      margin: 0.2em;
+    }
 
     .calibration-btn:focus {
       outline: none;

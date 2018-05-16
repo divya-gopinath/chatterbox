@@ -181,7 +181,7 @@ function createCalibrationPopup() {
   function createCalibrationBtn(row, col) {
     var btn = document.createElement("button");
     btn.textContent = "😭";
-    btn.setAttribute("class", "emoji-btn calibration-btn");
+    btn.setAttribute("class", `emoji-btn calibration-btn row-${row} col-${col}`);
     btn.setAttribute("id", `calibrate-${row}-${col}`);
     btn.addEventListener("click", function() {
       clickCounter += 1
