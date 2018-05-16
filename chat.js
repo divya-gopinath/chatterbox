@@ -6,7 +6,6 @@ var EMOTIONS = ["contempt", "disgust", "fear", "joy", "anger", "sadness", "surpr
 var NUM_FRAMES = 5;
 var VOICE_RECORDING = false;
 var SCROLL_ACTIVE = false;
-var EMOJI_TO_WORD = {}
 
 // Holds DOM elements that don’t change, to avoid repeatedly querying the DOM
 var dom = {};
@@ -35,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
   dom.scrollToggle.addEventListener('click', scrollControl);
   document.querySelector("#send-btn").addEventListener("click", send);
   document.querySelector("#recalibrate-btn").addEventListener("click", createCalibrationPopup);
-  document.querySelector("#continue-btn").addEventListener("click", createCalibrationPopup);
+  document.querySelector("#continue-btn").addEventListener("click", createSignIn);
   dom.affectiva.style.display = "none";
 
   dom.input.addEventListener("keydown", function(evt) {
@@ -50,23 +49,36 @@ document.addEventListener("DOMContentLoaded", function() {
   detector.detectAllEmotions();
   detector.addEventListener("onImageResultsSuccess", function (faces, image, timestamp) {
     if (faces.length > 0) {
-        var face = faces[0]; // take the first face in frame
-        var emoji = face.emojis.dominantEmoji == "☺" ? "🙂" : face.emojis.dominantEmoji;
-        var bestScore = 0;
-        EMOTIONS.forEach(function(emotion) {
-            var score = face.emotions[emotion];
-            if (score > bestScore) {
-                MOOD = emotion;
-                bestScore = score;
-            }
-        });
-        if (emoji != "😐" || DEVIATE_MOOD) {
-            dom.selectEmoji.textContent = emoji;
-            if (emoji != "😐") {
-                DEVIATE_MOOD = false;
-                setTimeout(function() { DEVIATE_MOOD = true; }, 5000); // only go back to neutral after 5 seconds
-            } else { MOOD = "neutral"; }
+      var face = faces[0]; // take the first face in frame
+      var emoji = face.emojis.dominantEmoji == "☺" ? "🙂" : face.emojis.dominantEmoji;
+      var bestScore = 0;
+      var bestEmotion = "";
+      console.log(emoji);
+      console.log(face.emojis);
+      console.log(face.emotions);
+      EMOTIONS.forEach(function(emotion) {
+        var score = face.emotions[emotion];
+        if (score > bestScore) {
+            bestEmotion = emotion;
+            bestScore = score;
         }
+      });
+
+      if (bestScore > 50) { // use the emotion suggestion
+        emoji = emojiBank[bestEmotion][0];
+        MOOD = bestEmotion;
+      }
+      else { // use the emoji suggestion
+        MOOD = emojiToWord[emoji]
+      }
+
+      if (emoji != "😐" || DEVIATE_MOOD) {
+        dom.selectEmoji.textContent = emoji;
+        if (emoji != "😐") {
+          DEVIATE_MOOD = false;
+          setTimeout(function() { DEVIATE_MOOD = true; }, 5000); // only go back to neutral after 5 seconds
+        } else { MOOD = "neutral"; }
+      }
     }
   });
 
