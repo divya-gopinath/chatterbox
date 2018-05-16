@@ -30,7 +30,7 @@
 
 Or go to <https://agile-citadel-17828.herokuapp.com/>.
 
-Runs on modern web browsers: Chrome, Firefox, Edge. Tested on Windows and Mac. Works best in a well-lit area, with the laptop on a desk or table so that the webcam is closer to eye level than it would be from a user's lap.
+Runs on Chrome, Firefox, and Edge. Tested on Windows, Linux, and Mac. Works best in a well-lit area, with the laptop on a desk or table so that the webcam is closer to eye level than it would be from a user's lap.
 
 
 ### Running the Python Chat
