@@ -26,4 +26,8 @@ var emojiToWord = {
   "😛": "tongueOut",
   "😉": "wink",
   "😗": "kiss",
+  "😳": "surprise",
+  "😏": "contempt",
+  "😐": "neutral",
+  "😒": "contempt",
 }

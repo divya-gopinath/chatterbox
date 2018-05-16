@@ -51,7 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (faces.length > 0) {
       var face = faces[0]; // take the first face in frame
       var emoji = face.emojis.dominantEmoji == "☺" ? "🙂" : face.emojis.dominantEmoji;
-
       var bestScore = 0;
       var bestEmotion = "";
       EMOTIONS.forEach(function(emotion) {
