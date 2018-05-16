@@ -29,6 +29,8 @@
 
 Or go to <https://agile-citadel-17828.herokuapp.com/>.
 
+Works best in a well-lit area, with the laptop on a desk or table so that the webcam is closer to eye level than it would be from a user's lap.
+
 
 ### Running the Python Chat
 1. TODO: Install dependencies
