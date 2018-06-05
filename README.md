@@ -1,4 +1,11 @@
-# 6835-project: Chatterbox
+# Chatterbox
+
+## What's Chatterbox?
+Chatterbox is a multimodal networked chat interface with three core features:
+1. Emoji suggestions based on emotion classification from webcam data
+2. Hands-free scrolling using gaze tracking from webcam data
+3. Voice-to-text functionality
+
 
 ## Table of Contents
 | Filename        | Description |
